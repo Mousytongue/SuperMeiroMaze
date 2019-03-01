@@ -13,7 +13,8 @@
 
 function Level0() {
     this.kUIButton = "assets/UI/button.png";
-    this.kUIBar = "assets/UI/healthbar.png";
+    this.kHealthBar = "assets/UI/healthbar.png";
+    this.kEnergyBar = "assets/UI/energybar.png";
     this.kBG = "assets/DyeAssets/bg.png";
     
     // The camera to view the scene
@@ -28,13 +29,15 @@ gEngine.Core.inheritPrototype(Level0, Scene);
 
 Level0.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kUIButton);
-    gEngine.Textures.loadTexture(this.kUIBar);
+    gEngine.Textures.loadTexture(this.kHealthBar);
+    gEngine.Textures.loadTexture(this.kEnergyBar);
     gEngine.Textures.loadTexture(this.kBG);
 };
 
 Level0.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kUIButton);
-    gEngine.Textures.unloadTexture(this.kUIBar);
+    gEngine.Textures.unloadTexture(this.kHealthBar);
+    gEngine.Textures.unloadTexture(this.kEnergyBar);
     gEngine.Textures.unloadTexture(this.kBG);
     
     if(this.LevelSelect==="Level1"){
@@ -57,8 +60,8 @@ Level0.prototype.initialize = function () {
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
     
     //UI
-    this.UIHealth = new UIHealthBar(this.kUIBar,[250,500],[380,20],0);
-    this.UIEnergy = new UIHealthBar(this.kUIBar,[250,550],[380,20],0);
+    this.UIHealth = new UIHealthBar(this.kHealthBar,[175,575],[300,20],0);
+    this.UIEnergy = new UIHealthBar(this.kEnergyBar,[175,550],[300,20],0);
     
     //Background
     this.bg = new TextureRenderable(this.kBG);
