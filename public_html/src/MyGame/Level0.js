@@ -84,6 +84,16 @@ Level0.prototype.draw = function () {
 Level0.prototype.update = function () {
     this.UIHealth.update();
     this.UIEnergy.update();
+    
+    //Testing functions to be removed later
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Up))
+        this.hpUp();
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Down))
+        this.hpDown();
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Right))
+        this.energyUp();
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Left))
+        this.energyDown();
 };
 
 Level0.prototype.nextLevel = function(){
@@ -100,7 +110,7 @@ Level0.prototype.hpUp = function (){
     this.UIHealth.incCurrentHP(10);  
 };
 
-Level0.prototype.hpUp = function (){
+Level0.prototype.hpDown = function (){
     this.UIHealth.incCurrentHP(-10);  
 };
 
@@ -108,6 +118,6 @@ Level0.prototype.energyUp = function (){
     this.UIEnergy.incCurrentHP(10);  
 };
 
-Level0.prototype.energyUp = function (){
+Level0.prototype.energyDown = function (){
     this.UIEnergy.incCurrentHP(-10);  
 };
