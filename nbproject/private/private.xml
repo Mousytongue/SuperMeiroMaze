@@ -5,8 +5,10 @@
         <group name="BookSourceCode">
             <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/Engine/UI/UIHealthBar.js</file>
             <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/MyGame.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/Engine/Utils/Transform.js</file>
             <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/index.html</file>
             <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/GameOver.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Hero.js</file>
             <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Level0.js</file>
         </group>
     </open-files>

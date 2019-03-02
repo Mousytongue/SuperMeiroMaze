@@ -16,6 +16,8 @@ function Level0() {
     this.kHealthBar = "assets/UI/healthbar.png";
     this.kEnergyBar = "assets/UI/energybar.png";
     this.kBG = "assets/DyeAssets/bg.png";
+    this.kWallTexture = "assets/DyeAssets/bg2.png";
+    this.kMinionSprite = "assets/DyeAssets/minion_sprite.png";
     
     // The camera to view the scene
     this.mCamera = null;
@@ -23,6 +25,8 @@ function Level0() {
     this.UIHealth = null;
     this.UIEnergy = null;
     this.bg = null;
+    this.mWorldObjects = null;
+    this.mHero = null;
 }
 gEngine.Core.inheritPrototype(Level0, Scene);
 
@@ -32,6 +36,8 @@ Level0.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kHealthBar);
     gEngine.Textures.loadTexture(this.kEnergyBar);
     gEngine.Textures.loadTexture(this.kBG);
+    gEngine.Textures.loadTexture(this.kWallTexture);
+    gEngine.Textures.loadTexture(this.kMinionSprite);
 };
 
 Level0.prototype.unloadScene = function () {
@@ -39,6 +45,8 @@ Level0.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kHealthBar);
     gEngine.Textures.unloadTexture(this.kEnergyBar);
     gEngine.Textures.unloadTexture(this.kBG);
+    gEngine.Textures.unloadTexture(this.kWallTexture);
+    gEngine.Textures.unloadTexture(this.kMinionSprite);
     
     if(this.LevelSelect==="Level1"){
         gEngine.Core.startScene(new Level1());
@@ -67,7 +75,13 @@ Level0.prototype.initialize = function () {
     this.bg = new TextureRenderable(this.kBG);
     this.bg.getXform().setSize(200,160);
     this.bg.getXform().setPosition(30,20);
-
+    
+    //World
+    this.mWorldObjects = new GameObjectSet();
+    this.worldSpawn();
+    
+    //Hero (ship)
+    this.mHero = new Hero(this.kMinionSprite);
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -79,11 +93,14 @@ Level0.prototype.draw = function () {
     this.bg.draw(this.mCamera);
     this.UIHealth.draw(this.mCamera);
     this.UIEnergy.draw(this.mCamera);
+    this.mHero.draw(this.mCamera);
+    this.mWorldObjects.draw(this.mCamera);
 };
 
 Level0.prototype.update = function () {
     this.UIHealth.update();
     this.UIEnergy.update();
+    this.mHero.update();
     
     //Testing functions to be removed later
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Up))
@@ -94,6 +111,10 @@ Level0.prototype.update = function () {
         this.energyUp();
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Left))
         this.energyDown();
+    var mCamX = this.mCamera.mouseWCX();
+    var mCamY = this.mCamera.mouseWCY();
+    var p = vec2.fromValues(mCamX, mCamY);
+    //console.log(p);
 };
 
 Level0.prototype.nextLevel = function(){
@@ -120,4 +141,18 @@ Level0.prototype.energyUp = function (){
 
 Level0.prototype.energyDown = function (){
     this.UIEnergy.incCurrentHP(-10);  
+};
+
+Level0.prototype.worldSpawn = function () {
+    var mTopWall = new TextureRenderable(this.kWallTexture);
+    mTopWall.setColor([1,1,1,0]);
+    mTopWall.getXform().setSize(100,100);
+    mTopWall.getXform().setPosition(50,120);    
+    this.mWorldObjects.addToSet(mTopWall);
+    
+    var mBotWall = new TextureRenderable(this.kWallTexture);
+    mBotWall.setColor([1,1,1,0]);
+    mBotWall.getXform().setSize(100,100);
+    mBotWall.getXform().setPosition(50,-40);    
+    this.mWorldObjects.addToSet(mBotWall);
 };
