@@ -24,14 +24,11 @@ function Level0() {
     this.LevelSelect = null;
     this.UIHealth = null;
     this.UIEnergy = null;
-    this.bg = null;
+    this.mBg = null;
     this.mWorldObjects = null;
+    this.mDoorObjects = null;
     this.mHero = null;
-    this.mDoor1 = null;
-    this.mDoor2 = null;
-    this.mDoor3 = null;
-    this.mDoor4 = null;
-    this.mDoor5 = null;
+    this.mPanSpeed = .3;
 }
 gEngine.Core.inheritPrototype(Level0, Scene);
 
@@ -77,32 +74,17 @@ Level0.prototype.initialize = function () {
     this.UIEnergy = new UIHealthBar(this.kEnergyBar,[175,550],[300,20],0);
     
     //Background
-    this.bg = new TextureRenderable(this.kBG);
-    this.bg.getXform().setSize(200,160);
-    this.bg.getXform().setPosition(30,20);
+    this.mBg = new TextureRenderable(this.kBG);
+    this.mBg.getXform().setSize(200,160);
+    this.mBg.getXform().setPosition(30,20);
     
     //World
     this.mWorldObjects = new GameObjectSet();
+    this.mDoorObjects = new GameObjectSet();
     this.worldSpawn();
     
     //Hero (ship)
-    this.mHero = new Hero(this.kMinionSprite);
-    //TestDoor
-    this.mDoor1 = new MovingDoor(this.kMinionSprite);
-    this.mDoor1.setXCenter(40);
-    this.mDoor1.setInitialDelay(30);
-    this.mDoor2 = new MovingDoor(this.kMinionSprite);
-    this.mDoor2.setXCenter(50);
-    this.mDoor2.setInitialDelay(50);
-    this.mDoor3 = new MovingDoor(this.kMinionSprite);
-    this.mDoor3.setXCenter(60);
-    this.mDoor3.setInitialDelay(70);
-    this.mDoor4 = new MovingDoor(this.kMinionSprite);
-    this.mDoor4.setXCenter(70);
-    this.mDoor4.setInitialDelay(90);
-    this.mDoor5 = new MovingDoor(this.kMinionSprite);
-    this.mDoor5.setXCenter(80);
-    this.mDoor5.setInitialDelay(110);
+    this.mHero = new Hero(this.kMinionSprite);    
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -111,27 +93,23 @@ Level0.prototype.draw = function () {
     // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
     this.mCamera.setupViewProjection();
-    this.bg.draw(this.mCamera);
+    this.mBg.draw(this.mCamera);
     this.UIHealth.draw(this.mCamera);
     this.UIEnergy.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
-    this.mDoor1.draw(this.mCamera);
-    this.mDoor2.draw(this.mCamera);
-    this.mDoor3.draw(this.mCamera);
-    this.mDoor4.draw(this.mCamera);
-    this.mDoor5.draw(this.mCamera);
-    this.mWorldObjects.draw(this.mCamera);
+    this.mDoorObjects.draw(this.mCamera);
+    this.mWorldObjects.draw(this.mCamera); 
 };
 
 Level0.prototype.update = function () {
+    //Update Objects and UI
     this.UIHealth.update();
     this.UIEnergy.update();
     this.mHero.update();
-    this.mDoor1.update();
-    this.mDoor2.update();
-    this.mDoor3.update();
-    this.mDoor4.update();
-    this.mDoor5.update();
+    this.mDoorObjects.update();
+    this.mCamera.update();
+    //Call level pan
+    this.panLevel();
     
     //Testing functions to be removed later
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Up))
@@ -146,6 +124,15 @@ Level0.prototype.update = function () {
     var mCamY = this.mCamera.mouseWCY();
     var p = vec2.fromValues(mCamX, mCamY);
     //console.log(p);
+};
+
+Level0.prototype.panLevel = function () {
+    //Camera
+    this.mCamera.panBy(this.mPanSpeed * 10, 0.0);
+    //Hero
+    this.mHero.getXform().incXPosBy(this.mPanSpeed);
+    //Background
+    this.mBg.getXform().incXPosBy(this.mPanSpeed);
 };
 
 Level0.prototype.nextLevel = function(){
@@ -175,10 +162,23 @@ Level0.prototype.energyDown = function (){
 };
 
 Level0.prototype.worldSpawn = function () {
+    //Walls
     var mTopWall = new TextureRenderable(this.kWallTexture);
     mTopWall.setColor([1,1,1,0]);
     mTopWall.getXform().setSize(100,100);
     mTopWall.getXform().setPosition(50,120);    
+    this.mWorldObjects.addToSet(mTopWall);
+    
+    mTopWall = new TextureRenderable(this.kWallTexture);
+    mTopWall.setColor([1,1,1,0]);
+    mTopWall.getXform().setSize(100,100);
+    mTopWall.getXform().setPosition(150,120);    
+    this.mWorldObjects.addToSet(mTopWall);
+    
+    mTopWall = new TextureRenderable(this.kWallTexture);
+    mTopWall.setColor([1,1,1,0]);
+    mTopWall.getXform().setSize(100,100);
+    mTopWall.getXform().setPosition(250,120);    
     this.mWorldObjects.addToSet(mTopWall);
     
     var mBotWall = new TextureRenderable(this.kWallTexture);
@@ -186,4 +186,39 @@ Level0.prototype.worldSpawn = function () {
     mBotWall.getXform().setSize(100,100);
     mBotWall.getXform().setPosition(50,-40);    
     this.mWorldObjects.addToSet(mBotWall);
+    
+    mBotWall = new TextureRenderable(this.kWallTexture);
+    mBotWall.setColor([1,1,1,0]);
+    mBotWall.getXform().setSize(100,100);
+    mBotWall.getXform().setPosition(150,-40);    
+    this.mWorldObjects.addToSet(mBotWall);
+    
+    mBotWall = new TextureRenderable(this.kWallTexture);
+    mBotWall.setColor([1,1,1,0]);
+    mBotWall.getXform().setSize(100,100);
+    mBotWall.getXform().setPosition(250,-40);    
+    this.mWorldObjects.addToSet(mBotWall);
+    
+    
+    //First Set of doors
+    var mDoor = new MovingDoor(this.kMinionSprite);
+    mDoor.setXCenter(100);
+    mDoor.setInitialDelay(30);
+    this.mDoorObjects.addToSet(mDoor);
+    mDoor = new MovingDoor(this.kMinionSprite);
+    mDoor.setXCenter(110);
+    mDoor.setInitialDelay(50);
+    this.mDoorObjects.addToSet(mDoor);
+    mDoor = new MovingDoor(this.kMinionSprite);
+    mDoor.setXCenter(120);
+    mDoor.setInitialDelay(70);
+    this.mDoorObjects.addToSet(mDoor);
+    mDoor = new MovingDoor(this.kMinionSprite);
+    mDoor.setXCenter(130);
+    mDoor.setInitialDelay(90);
+    this.mDoorObjects.addToSet(mDoor);
+    mDoor = new MovingDoor(this.kMinionSprite);
+    mDoor.setXCenter(140);
+    mDoor.setInitialDelay(110);
+    this.mDoorObjects.addToSet(mDoor);
 };
