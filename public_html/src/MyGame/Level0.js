@@ -27,6 +27,11 @@ function Level0() {
     this.bg = null;
     this.mWorldObjects = null;
     this.mHero = null;
+    this.mDoor1 = null;
+    this.mDoor2 = null;
+    this.mDoor3 = null;
+    this.mDoor4 = null;
+    this.mDoor5 = null;
 }
 gEngine.Core.inheritPrototype(Level0, Scene);
 
@@ -82,6 +87,22 @@ Level0.prototype.initialize = function () {
     
     //Hero (ship)
     this.mHero = new Hero(this.kMinionSprite);
+    //TestDoor
+    this.mDoor1 = new MovingDoor(this.kMinionSprite);
+    this.mDoor1.setXCenter(40);
+    this.mDoor1.setInitialDelay(30);
+    this.mDoor2 = new MovingDoor(this.kMinionSprite);
+    this.mDoor2.setXCenter(50);
+    this.mDoor2.setInitialDelay(50);
+    this.mDoor3 = new MovingDoor(this.kMinionSprite);
+    this.mDoor3.setXCenter(60);
+    this.mDoor3.setInitialDelay(70);
+    this.mDoor4 = new MovingDoor(this.kMinionSprite);
+    this.mDoor4.setXCenter(70);
+    this.mDoor4.setInitialDelay(90);
+    this.mDoor5 = new MovingDoor(this.kMinionSprite);
+    this.mDoor5.setXCenter(80);
+    this.mDoor5.setInitialDelay(110);
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -94,6 +115,11 @@ Level0.prototype.draw = function () {
     this.UIHealth.draw(this.mCamera);
     this.UIEnergy.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
+    this.mDoor1.draw(this.mCamera);
+    this.mDoor2.draw(this.mCamera);
+    this.mDoor3.draw(this.mCamera);
+    this.mDoor4.draw(this.mCamera);
+    this.mDoor5.draw(this.mCamera);
     this.mWorldObjects.draw(this.mCamera);
 };
 
@@ -101,6 +127,11 @@ Level0.prototype.update = function () {
     this.UIHealth.update();
     this.UIEnergy.update();
     this.mHero.update();
+    this.mDoor1.update();
+    this.mDoor2.update();
+    this.mDoor3.update();
+    this.mDoor4.update();
+    this.mDoor5.update();
     
     //Testing functions to be removed later
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Up))
