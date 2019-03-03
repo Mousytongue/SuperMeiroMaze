@@ -8,10 +8,10 @@
 /*global gEngine: false, GameObject: false, SpriteRenderable, vec2: false */
 /* find out more about jslint: http://www.jslint.com/help.html */
 
-"use strict"
+"use strict";
 
-const RETICLE_WIDTH = 20;
-const RETICLE_HEIGHT = 20;
+const RETICLE_WIDTH = 4;
+const RETICLE_HEIGHT = 4;
 
 function Reticle(spriteTexture) {
 
@@ -42,6 +42,6 @@ Reticle.prototype.update = function () {
 
 Reticle.prototype.setDirection = function (mousePos){
     if(this.mInterp === null);
-        this.mInterp = new InterpolateVec2(this.getXform().getPosition(), 120, 1);
+        this.mInterp = new InterpolateVec2(this.getXform().getPosition(), 120, 0.5);
     this.mInterp.setFinalValue(mousePos);
 };
