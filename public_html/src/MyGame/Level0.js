@@ -4,7 +4,7 @@
  */
 
 /*jslint node: true, vars: true */
-/*global gEngine, Scene, GameObjectset, TextureObject, Camera, vec2,
+/*global gEngine, Scene, GameObjectset, TextureObject, Camera, vec2, Reticle,
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObject */
 /* find out more about jslint: http://www.jslint.com/help.html */
@@ -27,6 +27,7 @@ function Level0() {
     this.bg = null;
     this.mWorldObjects = null;
     this.mHero = null;
+    this.mReticle = null;
 }
 gEngine.Core.inheritPrototype(Level0, Scene);
 
@@ -82,6 +83,10 @@ Level0.prototype.initialize = function () {
     
     //Hero (ship)
     this.mHero = new Hero(this.kMinionSprite);
+    
+    //Reticle
+    this.mReticle = new Reticle(this.kMinionSprite);
+    //console.log(this.mReticle);
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -93,14 +98,18 @@ Level0.prototype.draw = function () {
     this.bg.draw(this.mCamera);
     this.UIHealth.draw(this.mCamera);
     this.UIEnergy.draw(this.mCamera);
+    
+    // console.log(this.mReticle);`    `
     this.mHero.draw(this.mCamera);
     this.mWorldObjects.draw(this.mCamera);
+    this.mReticle.draw(this.mCamera);
 };
 
 Level0.prototype.update = function () {
     this.UIHealth.update();
     this.UIEnergy.update();
     this.mHero.update();
+    this.mReticle.update();
     
     //Testing functions to be removed later
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Up))
@@ -113,8 +122,13 @@ Level0.prototype.update = function () {
         this.energyDown();
     var mCamX = this.mCamera.mouseWCX();
     var mCamY = this.mCamera.mouseWCY();
+    if (mCamY > 110)
+            mCamY = 110;
+    if (mCamY < -35)
+        mCamY = -35;
     var p = vec2.fromValues(mCamX, mCamY);
-    //console.log(p);
+    this.mReticle.setDirection(p);
+    console.log(this.mReticle.getXform().getPosition());
 };
 
 Level0.prototype.nextLevel = function(){
