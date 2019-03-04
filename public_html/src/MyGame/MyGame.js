@@ -10,6 +10,7 @@
 /* find out more about jslint: http://www.jslint.com/help.html */
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
+var mGlobalSpeed = null;
 
 function MyGame() {
     this.kUIButton = "assets/UI/button.png";
