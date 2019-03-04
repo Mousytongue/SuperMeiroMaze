@@ -191,13 +191,34 @@ Level0.prototype.detectCollide = function() {
             }
         }
   }
+  for (var i = 0; i < this.mBreakableSet.size(); i++){
+      if(!this.mHero.isInvunerable()){
+          var wall = this.mBreakableSet.getObjectAt(i);
+          if (this.mHero.pixelTouches(wall,h)){
+              this.hpDown(34);
+              this.mHero.setInvunerable(180);
+              break;
+          }
+      }
+  }
+  
   
   //Missle Loop, need to improve and intergrate into above loops
   for (var i = 0; i < this.mMissileSet.size(); ++i){
         var missile = this.mMissileSet.getObjectAt(i);
         var target = this.mTargetSet.getObjectAt(i);
-        
-        if(missile.getXform().getPosition() === target.getXform().getPosition()) {
+        var missleVec = missile.getXform().getPosition();
+        var targetVec = target.getXform().getPosition();
+        var xDiff = missleVec[0] - targetVec[0];
+        if (xDiff < 0)
+            xDiff *= -1;
+        var yDiff = missleVec[1] - targetVec[1];
+        if (yDiff < 0)
+            yDiff *= -1;
+        var tDiff = xDiff+yDiff;
+      
+        //console.log(tDiff);
+        if(tDiff < 1) {
             this.mMissileSet.removeFromSet(missile);
             this.mTargetSet.removeFromSet(target);
         }
@@ -208,9 +229,8 @@ Level0.prototype.detectCollide = function() {
                 this.mBreakableSet.removeFromSet(wall);
                 this.mMissileSet.removeFromSet(missile);
                 this.mTargetSet.removeFromSet(target);
-            }
-        }
-        
+            }          
+        }        
     }   
 };
 
@@ -227,6 +247,11 @@ Level0.prototype.panLevel = function () {
     this.mHero.getXform().incXPosBy(this.mPanSpeed * mGlobalSpeed);
     //Background
     this.mBg.getXform().incXPosBy(this.mPanSpeed * mGlobalSpeed);
+    
+    for (var i = 0; i < this.mMissileSet.size(); i++){
+       this.mMissileSet.getObjectAt(i).getXform().incXPosBy(this.mPanSpeed * mGlobalSpeed); 
+    }
+    
 };
 
 Level0.prototype.nextLevel = function(){
@@ -283,9 +308,27 @@ Level0.prototype.worldSpawn = function () {
     }
     
     //Breakable wall
-    for (var i = 0; i < 10; i++){
+    for (var i = 0; i < 15; i++){
          this.mBreakableSet.addToSet(
                  new BreakableWall(this.kMinionSprite, vec2.fromValues(100, 5 +(i*5))));
+         this.mBreakableSet.addToSet(
+                 new BreakableWall(this.kMinionSprite, vec2.fromValues(105, 5 +(i*5))));
+         this.mBreakableSet.addToSet(
+                 new BreakableWall(this.kMinionSprite, vec2.fromValues(110, 5 +(i*5))));
+         
+         this.mBreakableSet.addToSet(
+                 new BreakableWall(this.kMinionSprite, vec2.fromValues(150, 5 +(i*5))));
+         this.mBreakableSet.addToSet(
+                 new BreakableWall(this.kMinionSprite, vec2.fromValues(155, 5 +(i*5))));
+         this.mBreakableSet.addToSet(
+                 new BreakableWall(this.kMinionSprite, vec2.fromValues(160, 5 +(i*5))));
+         
+         this.mBreakableSet.addToSet(
+                 new BreakableWall(this.kMinionSprite, vec2.fromValues(200, 5 +(i*5))));
+         this.mBreakableSet.addToSet(
+                 new BreakableWall(this.kMinionSprite, vec2.fromValues(205, 5 +(i*5))));
+         this.mBreakableSet.addToSet(
+                 new BreakableWall(this.kMinionSprite, vec2.fromValues(210, 5 +(i*5))));
     }
    
 };
