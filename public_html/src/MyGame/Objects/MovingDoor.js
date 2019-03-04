@@ -45,20 +45,16 @@ MovingDoor.prototype.initialize = function () {
     this.mBotStartingPos = this.mYCenter - (this.mY * (this.mNumSegments-1)) - (this.mY/2);
    
     for (var i = 0; i < this.mNumSegments; i++){
-    var mDoor = new SpriteRenderable(this.mTexture);
-    mDoor.setColor([1, 1, 1, 0]);
+    var mDoor = new DoorSegment(this.mTexture);
     mDoor.getXform().setPosition(this.mXCenter, this.mTopStartingPos);
     mDoor.getXform().setSize(this.mX, this.mY);
-    mDoor.setElementPixelPositions(510, 595, 23, 153);
     this.mTopSet.push(mDoor);
     }
     
     for (var i = 0; i < this.mNumSegments; i++){
-    var mDoor = new SpriteRenderable(this.mTexture);
-    mDoor.setColor([1, 1, 1, 0]);
+    var mDoor = new DoorSegment(this.mTexture);
     mDoor.getXform().setPosition(this.mXCenter, this.mBotStartingPos);
     mDoor.getXform().setSize(this.mX, this.mY);
-    mDoor.setElementPixelPositions(510, 595, 23, 153);
     this.mBotSet.push(mDoor);
     }
 };
@@ -176,4 +172,12 @@ MovingDoor.prototype.setInitialDelay = function (t){
 
 MovingDoor.prototype.setSpeed = function (s){
     this.mCloseSpeed = s;
+};
+
+MovingDoor.prototype.getTopSet = function (){
+  return this.mTopSet;  
+};
+
+MovingDoor.prototype.getBotSet = function (){
+  return this.mBotSet;  
 };

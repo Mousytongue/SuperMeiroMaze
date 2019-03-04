@@ -53,8 +53,11 @@ Level0.prototype.unloadScene = function () {
     if(this.LevelSelect==="Level1"){
         gEngine.Core.startScene(new Level1());
     }
-    else if(this.LevelSelect==="Gameover"){
+    if(this.LevelSelect==="Gameover"){
         gEngine.Core.startScene(new GameOver());
+    }
+    if (this.LevelSelect==="MyGame"){
+        gEngine.Core.startScene(new MyGame());
     }
 };
 
@@ -108,8 +111,16 @@ Level0.prototype.update = function () {
     this.mHero.update();
     this.mDoorObjects.update();
     this.mCamera.update();
+    
     //Call level pan
     this.panLevel();
+    
+    //GameOver -currently just reload MyGame
+    if (this.UIHealth.getCurrentHP() === 0)
+        this.restart();
+    
+    //Collision detection
+    this.detectCollide();
     
     //Testing functions to be removed later
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Up))
@@ -124,6 +135,37 @@ Level0.prototype.update = function () {
     var mCamY = this.mCamera.mouseWCY();
     var p = vec2.fromValues(mCamX, mCamY);
     //console.log(p);
+};
+
+Level0.prototype.detectCollide = function() {
+  var h = [];  
+  for (var i = 0; i < this.mWorldObjects.size(); i++){
+        if(!this.mHero.isInvunerable()){
+           if (this.mHero.pixelTouches(this.mWorldObjects.getObjectAt(i), h)){
+                this.UIHealth.incCurrentHP(-34);
+                this.resetLife();
+            }
+        }
+  }
+  for (var i = 0; i < this.mDoorObjects.size(); i++){
+        if(!this.mHero.isInvunerable()){
+            var mCurrentSet = this.mDoorObjects.getObjectAt(i);
+            var mTopSet = mCurrentSet.getTopSet();
+            var mBotSet = mCurrentSet.getBotSet();
+            for (var j = 0; j < mTopSet.length; j++){
+                if (this.mHero.pixelTouches(mTopSet[j], h) || this.mHero.pixelTouches(mBotSet[j], h)){
+                    this.UIHealth.incCurrentHP(-33);
+                    this.resetLife();
+                }
+            }
+        }
+  }
+};
+
+Level0.prototype.resetLife = function() {
+  var mCamWC = this.mCamera.getWCCenter();
+  this.mHero.getXform().setPosition(mCamWC[0], mCamWC[1]);
+  this.mHero.setInvunerable(180);
 };
 
 Level0.prototype.panLevel = function () {
@@ -145,6 +187,11 @@ Level0.prototype.gameOver = function(){
     gEngine.GameLoop.stop();
 };
 
+Level0.prototype.restart = function(){
+  this.LevelSelect="MyGame";
+  gEngine.GameLoop.stop();
+};
+
 Level0.prototype.hpUp = function (){
     this.UIHealth.incCurrentHP(10);  
 };
@@ -163,38 +210,32 @@ Level0.prototype.energyDown = function (){
 
 Level0.prototype.worldSpawn = function () {
     //Walls
-    var mTopWall = new TextureRenderable(this.kWallTexture);
-    mTopWall.setColor([1,1,1,0]);
+    var mTopWall = new Wall(this.kWallTexture);
     mTopWall.getXform().setSize(100,100);
     mTopWall.getXform().setPosition(50,120);    
     this.mWorldObjects.addToSet(mTopWall);
     
-    mTopWall = new TextureRenderable(this.kWallTexture);
-    mTopWall.setColor([1,1,1,0]);
+    mTopWall = new Wall(this.kWallTexture);
     mTopWall.getXform().setSize(100,100);
     mTopWall.getXform().setPosition(150,120);    
     this.mWorldObjects.addToSet(mTopWall);
     
-    mTopWall = new TextureRenderable(this.kWallTexture);
-    mTopWall.setColor([1,1,1,0]);
+    mTopWall = new Wall(this.kWallTexture);
     mTopWall.getXform().setSize(100,100);
     mTopWall.getXform().setPosition(250,120);    
     this.mWorldObjects.addToSet(mTopWall);
     
-    var mBotWall = new TextureRenderable(this.kWallTexture);
-    mBotWall.setColor([1,1,1,0]);
+    var mBotWall = new Wall(this.kWallTexture);
     mBotWall.getXform().setSize(100,100);
     mBotWall.getXform().setPosition(50,-40);    
     this.mWorldObjects.addToSet(mBotWall);
     
-    mBotWall = new TextureRenderable(this.kWallTexture);
-    mBotWall.setColor([1,1,1,0]);
+    mBotWall = new Wall(this.kWallTexture);
     mBotWall.getXform().setSize(100,100);
     mBotWall.getXform().setPosition(150,-40);    
     this.mWorldObjects.addToSet(mBotWall);
     
-    mBotWall = new TextureRenderable(this.kWallTexture);
-    mBotWall.setColor([1,1,1,0]);
+    mBotWall = new Wall(this.kWallTexture);
     mBotWall.getXform().setSize(100,100);
     mBotWall.getXform().setPosition(250,-40);    
     this.mWorldObjects.addToSet(mBotWall);
