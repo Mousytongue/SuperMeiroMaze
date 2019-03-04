@@ -13,7 +13,7 @@
 
 function Hero(spriteTexture) {
     this.kDelta = 0.3;
-
+    
     this.mDye = new SpriteRenderable(spriteTexture);
     this.mDye.setColor([1, 1, 1, 0]);
     this.mDye.getXform().setPosition(0,30);
@@ -24,12 +24,20 @@ function Hero(spriteTexture) {
     this.mMoveSpeed = 1;
     this.mX = 9;           //Width
     this.mY = 12;          //Height
+    this.mFlashing = true;
+    this.mFlashTimer = 0;
+    this.mFlashTimer2 = 0;
+    this.mFlashTimerMax = 10;
+    this.mIsInvunerable = false;
     this.mShakePosition = new ShakePosition(0, 0, 0, 0);
 }
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
 Hero.prototype.update = function () {
     var xform = this.getXform();
+    
+    //Ticks invunerable timer
+    
     
     //WASD controls
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W))
@@ -42,6 +50,29 @@ Hero.prototype.update = function () {
         xform.incXPosBy(this.mMoveSpeed);
     
     
+    //Invunerable flash logic
+    //Ticks the timers when invunerable state
+    if (this.mIsInvunerable){
+        this.mFlashTimer += 1;
+        this.mFlashTimer2 += 1;
+    }
+    //every half second, the ship will change visibility state
+    if (this.mFlashTimer2 >= 30){
+        if (this.mFlashing === true)
+            this.mFlashing = false;
+        else
+            this.mFlashing = true;
+        this.mFlashTimer2 = 0;
+    }
+    this.setVisibility(this.mFlashing);
+    //When time expires, resets the timers and removes invunerable state
+    if (this.mFlashTimer >= this.mFlashTimerMax){
+        this.mIsInvunerable = false;
+        this.mFlashTimer = 0;
+        this.mFlashTimer2 = 0;
+    }
+    //console.log(this.isVisible());
+   // console.log(this.getXform().getPosition());
     
     //Shake logic
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
@@ -55,6 +86,15 @@ Hero.prototype.update = function () {
     
 }; 
 
+
+Hero.prototype.setInvunerable = function (time){
+    this.mIsInvunerable = true;
+    this.mFlashTimerMax = time;      
+};
+
+Hero.prototype.isInvunerable = function (){
+    return this.mIsInvunerable;
+};
 
 Hero.prototype.hitShake = function () {
     if (this.mShakePosition.shakeDone())
