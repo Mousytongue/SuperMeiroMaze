@@ -32,7 +32,7 @@ function Level0() {
     this.mWorldObjects = null;
     this.mDoorObjects = null;
     this.mHero = null;
-    this.mPanSpeed = 0;   
+    this.mPanSpeed = 0.3;   
     this.mReticle = null;
     
     this.mMissileSet = null;
