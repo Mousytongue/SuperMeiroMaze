@@ -15,11 +15,11 @@ const TARGET_HEIGHT = 4;
 
 function Target(spriteTexture, pos) {
 
-    this.mTarget = new SpriteRenderable(spriteTexture);
+    this.mTarget = new TextureRenderable(spriteTexture);
     this.mTarget.setColor([1, 1, 1, 0]);
     this.mTarget.getXform().setPosition(pos[0], pos[1]);
     this.mTarget.getXform().setSize(TARGET_WIDTH, TARGET_HEIGHT);
-    this.mTarget.setElementPixelPositions(120, 300, 0, 180);
+    //this.mTarget.setElementPixelPositions(120, 300, 0, 180);
     GameObject.call(this, this.mTarget);
     
     this.hit = false;

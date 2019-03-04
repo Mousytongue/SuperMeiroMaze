@@ -16,9 +16,9 @@ function Hero(spriteTexture) {
     
     this.mDye = new SpriteRenderable(spriteTexture);
     this.mDye.setColor([1, 1, 1, 0]);
-    this.mDye.getXform().setPosition(0,30);
+    this.mDye.getXform().setPosition(50,30);
     this.mDye.getXform().setSize(9, 12);
-    this.mDye.setElementPixelPositions(0, 120, 0, 180);
+    this.mDye.setElementPixelPositions(0, 60, 78, 128);
     GameObject.call(this, this.mDye);
     
     this.mMoveSpeed = 1;
@@ -33,21 +33,26 @@ function Hero(spriteTexture) {
 }
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
-Hero.prototype.update = function () {
-    var xform = this.getXform();
-    
-    //Ticks invunerable timer
-    
+Hero.prototype.update = function (mCamera) {
+    var xform = this.getXform();    
+    var mCurrentPos = xform.getPosition();
+    var mCameraPos = mCamera.getWCCenter();
     
     //WASD controls
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W))
         xform.incYPosBy(this.mMoveSpeed);
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A))
+    {
+        if (mCurrentPos[0] > mCameraPos[0] - 45)
         xform.incXPosBy(-this.mMoveSpeed / 1.8);
+    }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S))
         xform.incYPosBy(-this.mMoveSpeed);
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D))
+    {
+        if(mCurrentPos[0] < mCameraPos[0] + 45)
         xform.incXPosBy(this.mMoveSpeed);
+    }
     
     
     //Invunerable flash logic
@@ -85,7 +90,6 @@ Hero.prototype.update = function () {
         xform.setSize(this.mX, this.mY);
     
 }; 
-
 
 Hero.prototype.setInvunerable = function (time){
     this.mIsInvunerable = true;
