@@ -11,5 +11,14 @@
             <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Hero.js</file>
             <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Level0.js</file>
         </group>
+        <group>
+            <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/index.html</file>
+            <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/BreakableWall.js</file>
+            <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/src/Engine/GameObjects/GameObject.js</file>
+            <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Level0.js</file>
+            <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Target.js</file>
+            <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/src/Engine/GameObjects/GameObjectSet.js</file>
+            <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Missile.js</file>
+        </group>
     </open-files>
 </project-private>

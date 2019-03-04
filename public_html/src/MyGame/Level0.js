@@ -4,7 +4,7 @@
  */
 
 /*jslint node: true, vars: true */
-/*global gEngine, Scene, GameObjectset, TextureObject, Camera, vec2,
+/*global gEngine, Scene, GameObjectset, TextureObject, Camera, vec2, Reticle,
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObj, mGlobalSpeed ect */
 /* find out more about jslint: http://www.jslint.com/help.html */
@@ -30,6 +30,11 @@ function Level0() {
     this.mHero = null;
     this.mPanSpeed = .3;
     mGlobalSpeed = 1.0;
+    this.mReticle = null;
+    
+    this.mMissileSet = null;
+    this.mTargetSet = null;
+    this.mBreakableSet = null;
 }
 gEngine.Core.inheritPrototype(Level0, Scene);
 
@@ -88,7 +93,19 @@ Level0.prototype.initialize = function () {
     this.worldSpawn();
     
     //Hero (ship)
-    this.mHero = new Hero(this.kMinionSprite);    
+    this.mHero = new Hero(this.kMinionSprite);
+    
+    //Reticle
+    this.mReticle = new Reticle(this.kMinionSprite);
+    
+    //MissileSet
+    this.mMissileSet = new GameObjectSet();
+    this.mTargetSet = new GameObjectSet();
+    this.mBreakableSet = new GameObjectSet();
+    this.mBreakableSet.addToSet(new BreakableWall(this.kMinionSprite, 
+                                                  vec2.fromValues(20, 20)));
+    
+    //console.log(this.mReticle);
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -100,9 +117,14 @@ Level0.prototype.draw = function () {
     this.mBg.draw(this.mCamera);
     this.UIHealth.draw(this.mCamera);
     this.UIEnergy.draw(this.mCamera);
+    // console.log(this.mReticle);
+    this.mMissileSet.draw(this.mCamera);
+    this.mTargetSet.draw(this.mCamera);
+    this.mBreakableSet.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
     this.mDoorObjects.draw(this.mCamera);
     this.mWorldObjects.draw(this.mCamera); 
+    this.mReticle.draw(this.mCamera);
 };
 
 Level0.prototype.update = function () {
@@ -130,6 +152,9 @@ Level0.prototype.update = function () {
     }
     if(gEngine.Input.isKeyReleased(gEngine.Input.keys.Space))
         mGlobalSpeed = 1.0;
+    this.mReticle.update();
+    this.mMissileSet.update();
+    this.collide();
     
     //Testing functions to be removed later
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Up))
@@ -142,8 +167,17 @@ Level0.prototype.update = function () {
         this.energyDown();
     var mCamX = this.mCamera.mouseWCX();
     var mCamY = this.mCamera.mouseWCY();
-    var p = vec2.fromValues(mCamX, mCamY);
-    //console.log(p);
+    if (mCamY > 110)
+            mCamY = 110;
+    if (mCamY < -35)
+        mCamY = -35;
+    var target = vec2.fromValues(mCamX, mCamY);
+    this.mReticle.setDirection(target);
+    if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left)) {
+        this.missileSpawn(this.mHero.getXform().getPosition(), target);
+        
+    }
+    //console.log();
 };
 
 Level0.prototype.detectCollide = function() {
@@ -188,7 +222,7 @@ Level0.prototype.panLevel = function () {
 };
 
 Level0.prototype.nextLevel = function(){
-    this.LevelSelect="Level1";
+    this.LevelSelects="Level1";
     gEngine.GameLoop.stop();
 };
 
@@ -272,4 +306,36 @@ Level0.prototype.worldSpawn = function () {
     mDoor.setXCenter(140);
     mDoor.setInitialDelay(110);
     this.mDoorObjects.addToSet(mDoor);
+};
+
+Level0.prototype.missileSpawn = function(spawnPos, targetPos) {
+    var missile = new Missile(this.kMinionSprite, spawnPos);
+    missile.setDirection(targetPos);
+    this.mMissileSet.addToSet(missile);
+    this.mTargetSet.addToSet(new Target(this.kMinionSprite, targetPos));
+};
+
+Level0.prototype.collide = function(){
+    //Detect Hero collision
+    var k = [];
+    var h = [];
+    for (var i = 0; i < this.mMissileSet.size(); ++i){
+        var missile = this.mMissileSet.getObjectAt(i);
+        var target = this.mTargetSet.getObjectAt(i);
+        
+        if(missile.pixelTouches(target, k)) {
+            this.mMissileSet.removeFromSet(missile);
+            this.mTargetSet.removeFromSet(target);
+        }
+        
+        for(var j = 0; j < this.mBreakableSet.size(); ++j) {
+            var wall = this.mBreakableSet.getObjectAt(j);
+            if(missile.pixelTouches(wall, h)) {
+                this.mBreakableSet.removeFromSet(wall);
+                this.mMissileSet.removeFromSet(missile);
+                this.mTargetSet.removeFromSet(target);
+            }
+        }
+        
+    }    
 };
