@@ -6,7 +6,7 @@
  */
 
 /*jslint node: true, vars: true */
-/*global gEngine: false, GameObject: false, SpriteRenderable, vec2: false */
+/*global gEngine: false, GameObject: false, SpriteRenderable, vec2, mGlobalSpeed: false */
 /* find out more about jslint: http://www.jslint.com/help.html */
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
@@ -109,11 +109,11 @@ MovingDoor.prototype.update = function () {
                 }
                 for (var i = 0; i <= this.mCurrentMovingPoint; i++){
                     var xform = this.mTopSet[i].getXform();
-                    xform.incYPosBy(-this.mCloseSpeed);
+                    xform.incYPosBy(-this.mCloseSpeed * mGlobalSpeed);
                 }
                 for (var i = 0; i <= this.mCurrentMovingPoint; i++){
                     var xform = this.mBotSet[i].getXform();
-                    xform.incYPosBy(this.mCloseSpeed);
+                    xform.incYPosBy(this.mCloseSpeed * mGlobalSpeed);
                 }
             }
         }
@@ -126,12 +126,12 @@ MovingDoor.prototype.update = function () {
                 }
             for (var i = 0; i <= this.mCurrentMovingPoint; i++){
                 var xform = this.mTopSet[i].getXform();
-                xform.incYPosBy(+this.mCloseSpeed);
+                xform.incYPosBy(+this.mCloseSpeed * mGlobalSpeed);
                 //console.log("move loop reached");
                 }
             for (var i = 0; i <= this.mCurrentMovingPoint; i++){
                 var xform = this.mBotSet[i].getXform();
-                xform.incYPosBy(-this.mCloseSpeed);
+                xform.incYPosBy(-this.mCloseSpeed * mGlobalSpeed);
                 }
         }
 }; 

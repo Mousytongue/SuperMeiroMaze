@@ -6,7 +6,7 @@
 /*jslint node: true, vars: true */
 /*global gEngine, Scene, GameObjectset, TextureObject, Camera, vec2,
   FontRenderable, SpriteRenderable, LineRenderable,
-  GameObject */
+  GameObj, mGlobalSpeed ect */
 /* find out more about jslint: http://www.jslint.com/help.html */
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
@@ -29,6 +29,7 @@ function Level0() {
     this.mDoorObjects = null;
     this.mHero = null;
     this.mPanSpeed = .3;
+    mGlobalSpeed = 1.0;
 }
 gEngine.Core.inheritPrototype(Level0, Scene);
 
@@ -122,6 +123,14 @@ Level0.prototype.update = function () {
     //Collision detection
     this.detectCollide();
     
+    //Global slow
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)){
+        mGlobalSpeed = 0.5;
+        this.energyDown(0.2);
+    }
+    if(gEngine.Input.isKeyReleased(gEngine.Input.keys.Space))
+        mGlobalSpeed = 1.0;
+    
     //Testing functions to be removed later
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Up))
         this.hpUp();
@@ -142,8 +151,9 @@ Level0.prototype.detectCollide = function() {
   for (var i = 0; i < this.mWorldObjects.size(); i++){
         if(!this.mHero.isInvunerable()){
            if (this.mHero.pixelTouches(this.mWorldObjects.getObjectAt(i), h)){
-                this.UIHealth.incCurrentHP(-34);
-                this.resetLife();
+                this.hpDown(34);
+                this.resetPosition();
+                this.mHero.setInvunerable(180);
             }
         }
   }
@@ -154,15 +164,15 @@ Level0.prototype.detectCollide = function() {
             var mBotSet = mCurrentSet.getBotSet();
             for (var j = 0; j < mTopSet.length; j++){
                 if (this.mHero.pixelTouches(mTopSet[j], h) || this.mHero.pixelTouches(mBotSet[j], h)){
-                    this.UIHealth.incCurrentHP(-33);
-                    this.resetLife();
+                    this.hpDown(34);
+                    this.mHero.setInvunerable(180);
                 }
             }
         }
   }
 };
 
-Level0.prototype.resetLife = function() {
+Level0.prototype.resetPosition = function() {
   var mCamWC = this.mCamera.getWCCenter();
   this.mHero.getXform().setPosition(mCamWC[0], mCamWC[1]);
   this.mHero.setInvunerable(180);
@@ -170,11 +180,11 @@ Level0.prototype.resetLife = function() {
 
 Level0.prototype.panLevel = function () {
     //Camera
-    this.mCamera.panBy(this.mPanSpeed * 10, 0.0);
+    this.mCamera.panBy(this.mPanSpeed * 10 * mGlobalSpeed, 0.0);
     //Hero
-    this.mHero.getXform().incXPosBy(this.mPanSpeed);
+    this.mHero.getXform().incXPosBy(this.mPanSpeed * mGlobalSpeed);
     //Background
-    this.mBg.getXform().incXPosBy(this.mPanSpeed);
+    this.mBg.getXform().incXPosBy(this.mPanSpeed * mGlobalSpeed);
 };
 
 Level0.prototype.nextLevel = function(){
@@ -192,20 +202,20 @@ Level0.prototype.restart = function(){
   gEngine.GameLoop.stop();
 };
 
-Level0.prototype.hpUp = function (){
-    this.UIHealth.incCurrentHP(10);  
+Level0.prototype.hpUp = function (n){
+    this.UIHealth.incCurrentHP(n);  
 };
 
-Level0.prototype.hpDown = function (){
-    this.UIHealth.incCurrentHP(-10);  
+Level0.prototype.hpDown = function (n){
+    this.UIHealth.incCurrentHP(-n);  
 };
 
-Level0.prototype.energyUp = function (){
-    this.UIEnergy.incCurrentHP(10);  
+Level0.prototype.energyUp = function (n){
+    this.UIEnergy.incCurrentHP(n);  
 };
 
-Level0.prototype.energyDown = function (){
-    this.UIEnergy.incCurrentHP(-10);  
+Level0.prototype.energyDown = function (n){
+    this.UIEnergy.incCurrentHP(-n);  
 };
 
 Level0.prototype.worldSpawn = function () {
