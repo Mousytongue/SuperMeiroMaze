@@ -2,15 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="BookSourceCode">
-            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/Engine/UI/UIHealthBar.js</file>
-            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/MyGame.js</file>
-            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/Engine/Utils/Transform.js</file>
-            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/index.html</file>
-            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/GameOver.js</file>
-            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Hero.js</file>
-            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Level0.js</file>
-        </group>
         <group>
             <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/index.html</file>
             <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/BreakableWall.js</file>
@@ -19,6 +10,16 @@
             <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Target.js</file>
             <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/src/Engine/GameObjects/GameObjectSet.js</file>
             <file>file:/C:/Users/Andrei/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Missile.js</file>
+        </group>
+        <group name="BookSourceCode">
+            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Target.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/MovingDoor.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Reticle.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Missile.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/index.html</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/BreakableWall.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Objects/Hero.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/SuperMeiroMaze/public_html/src/MyGame/Level0.js</file>
         </group>
     </open-files>
 </project-private>

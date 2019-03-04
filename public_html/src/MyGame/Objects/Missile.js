@@ -10,8 +10,8 @@
 
 "use strict";
 
-const MISSILE_WIDTH = 4;
-const MISSILE_HEIGHT = 4;
+const MISSILE_WIDTH = 2;
+const MISSILE_HEIGHT = 2;
 
 function Missile(spriteTexture, pos) {
 
@@ -19,7 +19,7 @@ function Missile(spriteTexture, pos) {
     this.mMissile.setColor([1, 1, 1, 0]);
     this.mMissile.getXform().setPosition(pos[0], pos[1]);
     this.mMissile.getXform().setSize(MISSILE_WIDTH, MISSILE_HEIGHT);
-    this.mMissile.setElementPixelPositions(120, 300, 0, 180);
+    this.mMissile.setElementPixelPositions(10, 35, 0, 40);
     GameObject.call(this, this.mMissile);
     
     this.mMoveSpeed = 1;
@@ -42,6 +42,6 @@ Missile.prototype.update = function () {
 
 Missile.prototype.setDirection = function (mousePos){
     if(this.mInterp === null)
-        this.mInterp = new InterpolateVec2(this.getXform().getPosition(), 120, 0.01);
+        this.mInterp = new InterpolateVec2(this.getXform().getPosition(), 120, .1);
     this.mInterp.setFinalValue(mousePos);
 };
