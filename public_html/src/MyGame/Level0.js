@@ -143,8 +143,10 @@ Level0.prototype.update = function () {
     this.mCamera.update();
     this.mReticle.update(this.mCamera);
     this.mMissileSet.update();
+    this.mBreakableSet.update();
     this.panLevel();
     this.detectCollide();
+     gEngine.Physics.processCollision(this.mBreakableSet,[]);
     
     //GameOver -currently just reload MyGame
     if (this.UIHealth.getCurrentHP() === 0)
@@ -284,8 +286,17 @@ Level0.prototype.worldSpawn = function () {
     
     //Breakable wall
     for (var i = 0; i < 10; i++){
-         this.mBreakableSet.addToSet(
-                 new BreakableWall(this.kMinionSprite, vec2.fromValues(100, 5 +(i*5))));
+        var temp;
+        if(i === 0)
+            temp = new BreakableWall(this.kMinionSprite, vec2.fromValues(100, 5 +(i*5)), true);
+        else
+            var temp = new BreakableWall(this.kMinionSprite, vec2.fromValues(100, 5 +(i*5)), false);
+        var r = new RigidRectangle(mTopWall.getXform(), 5, 5);
+        r.setMass(1);
+        r.setRestitution(0.3);
+        r.setFriction(0.2);
+        this.mBreakableSet.addToSet(temp);
+        console.log(temp.getRigidBody().getVelocity());
     }
    
 };
