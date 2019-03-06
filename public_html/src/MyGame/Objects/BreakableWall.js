@@ -18,7 +18,7 @@ function BreakableWall(spriteTexture, pos) {
     this.mBreakableWall = new SpriteRenderable(spriteTexture);
     this.mBreakableWall.setColor([1, 1, 1, 0]);
     this.mBreakableWall.getXform().setPosition(pos[0], pos[1]);
-    this.mBreakableWall.getXform().setSize(5,5);
+    this.mBreakableWall.getXform().setSize(10,10);
     this.mBreakableWall.setElementPixelPositions(120, 300, 0, 180);
     GameObject.call(this, this.mBreakableWall);
     
