@@ -16,7 +16,7 @@ function Hero(spriteTexture) {
     
     this.mDye = new SpriteRenderable(spriteTexture);
     this.mDye.setColor([1, 1, 1, 0]);
-    this.mDye.getXform().setPosition(50,30);
+    this.mDye.getXform().setPosition(0,50);
     this.mDye.getXform().setSize(9, 12);
     this.mDye.setElementPixelPositions(0, 60, 78, 128);
     GameObject.call(this, this.mDye);
