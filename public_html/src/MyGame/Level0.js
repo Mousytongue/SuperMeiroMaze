@@ -290,22 +290,24 @@ Level0.prototype.energyDown = function (n){
 
 Level0.prototype.worldSpawn = function () {
     //1 = regular wall
+    //r = right slanted wall
+    //t = left slanted wall
     //2 = destructable wall
-    //3 = small closing door   Doors with special delay must be hand created
-    //4 = large closing door   Doors with special delay must be hand created
+    //3 = small closing door  
+    //4 = large closing door   
     //5 = lazers! or falling rocks, TBD
     
-    var Row0 = "111111111111111111111111111";  //Unseen, above camera
-    var Row1 = "111111111111111111111111111";
-    var Row2 = "000002200000000000000000000";
-    var Row3 = "000002200003330033300333000";
-    var Row4 = "000002200000000000000000000";
-    var Row5 = "000002204011111111111111104";
-    var Row6 = "000002200000000000000000000";
-    var Row7 = "000002200003330033300333000";
-    var Row8 = "000002200000000000000000000";
-    var Row9 = "111111111111111111111111111";
-    var Ro10 = "111111111111111111111111111"; //Unseen, below camera
+    var Row0 = "1111111111111111111111111111111111111111111111";  //Unseen, above camera
+    var Row1 = "1111111111111111111111111111111111111111111111";
+    var Row2 = "00000220000000000000000000000000000t0000000000";
+    var Row3 = "000002200003330033300333000000000000t000000000";
+    var Row4 = "00000220000000000000000000000000r000010000r000";
+    var Row5 = "0000022040111111111111111040000r0000r0000r00000";
+    var Row6 = "000002200000000000000000000000r0000r0000r00000";
+    var Row7 = "00000220000333003330033300000r000000000r000000";
+    var Row8 = "0000022000000000000000000000r000000000r0000000";
+    var Row9 = "1111111111111111111111111111111111111111111111";
+    var Ro10 = "1111111111111111111111111111111111111111111111"; //Unseen, below camera
     this.mWorldArray[0] = Row0.split("");
     this.mWorldArray[1] = Row1.split("");
     this.mWorldArray[2] = Row2.split("");
@@ -325,9 +327,13 @@ Level0.prototype.worldSpawn = function () {
             if (this.mWorldArray[i][j] === "2")
                 this.spawnDestructWall(j*10, 100 - (i*10));
             if (this.mWorldArray[i][j] === "3")
-                this.spawnSmallDoor(j*10, 100 - (i*10));
+                this.spawnSmallDoor(j*10, 100 - (i*10), j*10);
             if (this.mWorldArray[i][j] === "4")
-                this.spawnLargeDoor(j*10, 100 - (i*10));
+                this.spawnLargeDoor(j*10, 100 - (i*10), j*10);
+            if (this.mWorldArray[i][j] === "r")
+                this.spawnWallRight(j*10, 100 - (i*10));
+             if (this.mWorldArray[i][j] === "t")
+                this.spawnWallLeft(j*10, 100 - (i*10));
         }
     }
 
@@ -403,23 +409,43 @@ Level0.prototype.spawnWall = function (x, y){
         this.mWorldObjects.addToSet(mTopWall);
 };
 
+Level0.prototype.spawnWallRight = function (x, y){
+    var mTopWall = new Wall(this.kWallTexture);
+        mTopWall.getXform().setSize(10,20);
+        mTopWall.getXform().setPosition(x, y);  
+        mTopWall.getXform().setRotationInDegree(-45); 
+        this.mWorldObjects.addToSet(mTopWall);
+};
+
+Level0.prototype.spawnWallLeft = function (x, y){
+    var mTopWall = new Wall(this.kWallTexture);
+        mTopWall.getXform().setSize(10,20);
+        mTopWall.getXform().setPosition(x, y);  
+        mTopWall.getXform().setRotationInDegree(45); 
+        this.mWorldObjects.addToSet(mTopWall);
+};
+
+
+
 Level0.prototype.spawnDestructWall = function (x, y){
     this.mBreakableSet.addToSet(
             new BreakableWall(this.kMinionSprite, vec2.fromValues(x, y)));
 };
 
-Level0.prototype.spawnSmallDoor = function (x, y) {
+Level0.prototype.spawnSmallDoor = function (x, y, d) {
         var mDoor = new MovingDoor(this.kMinionSprite);
         mDoor.setXCenter(x);
         mDoor.setYCenter(y);
         mDoor.setHeight(40);
+        mDoor.setInitialDelay(d);
         this.mDoorObjects.addToSet(mDoor);
 };
 
-Level0.prototype.spawnLargeDoor = function (x, y) {
+Level0.prototype.spawnLargeDoor = function (x, y, d) {
         var mDoor = new MovingDoor(this.kMinionSprite);
         mDoor.setXCenter(x);
         mDoor.setYCenter(y);
+        mDoor.setInitialDelay(d);
         this.mDoorObjects.addToSet(mDoor);
 };
 
