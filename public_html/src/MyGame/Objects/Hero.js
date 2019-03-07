@@ -16,7 +16,7 @@ function Hero(spriteTexture) {
     
     this.mDye = new SpriteRenderable(spriteTexture);
     this.mDye.setColor([1, 1, 1, 0]);
-    this.mDye.getXform().setPosition(50,30);
+    this.mDye.getXform().setPosition(0,50);
     this.mDye.getXform().setSize(9, 12);
     this.mDye.setElementPixelPositions(0, 60, 78, 128);
     GameObject.call(this, this.mDye);
@@ -40,14 +40,20 @@ Hero.prototype.update = function (mCamera) {
     
     //WASD controls
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W))
+    {
+        if (mCurrentPos[1] < 85)
         xform.incYPosBy(this.mMoveSpeed);
+    }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A))
     {
         if (mCurrentPos[0] > mCameraPos[0] - 45)
-        xform.incXPosBy(-this.mMoveSpeed / 1.8);
+        xform.incXPosBy(-this.mMoveSpeed / 1.5);
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S))
+    {
+        if (mCurrentPos[1] > 18)
         xform.incYPosBy(-this.mMoveSpeed);
+    }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D))
     {
         if(mCurrentPos[0] < mCameraPos[0] + 45)

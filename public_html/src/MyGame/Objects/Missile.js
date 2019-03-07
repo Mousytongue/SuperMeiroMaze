@@ -17,11 +17,12 @@ function Missile(spriteTexture, pos) {
 
     this.mMissile = new SpriteRenderable(spriteTexture);
     this.mMissile.setColor([1, 1, 1, 0]);
-    this.mMissile.getXform().setPosition(pos[0], pos[1]);
+    this.mMissile.getXform().setPosition(pos[0], pos[1]-5);
     this.mMissile.getXform().setSize(MISSILE_WIDTH, MISSILE_HEIGHT);
     this.mMissile.setElementPixelPositions(10, 35, 0, 40);
     GameObject.call(this, this.mMissile);
     
+    this.mTimer = 0;
     this.mMoveSpeed = 1;
     this.mX = MISSILE_WIDTH;           //Width
     this.mY = MISSILE_HEIGHT;          //Height
@@ -31,17 +32,21 @@ function Missile(spriteTexture, pos) {
 gEngine.Core.inheritPrototype(Missile, GameObject);
 
 Missile.prototype.update = function () {
+    this.mTimer += 1;
     if (this.mInterp !== null){
         this.mInterp.updateInterpolation();
         var pos = this.mInterp.getValue();
         var pX = pos[0];
         var pY = pos[1];
         this.getXform().setPosition(pX, pY);
+        //if(this.mTimer > 60)
+        this.mMoveSpeed = (this.mTimer / 500) * mGlobalSpeed;
+        this.mInterp.setSpeed(this.mMoveSpeed);
     }
 };
 
 Missile.prototype.setDirection = function (mousePos){
     if(this.mInterp === null)
-        this.mInterp = new InterpolateVec2(this.getXform().getPosition(), 120, .1);
+        this.mInterp = new InterpolateVec2(this.getXform().getPosition(), 80, .005);
     this.mInterp.setFinalValue(mousePos);
 };

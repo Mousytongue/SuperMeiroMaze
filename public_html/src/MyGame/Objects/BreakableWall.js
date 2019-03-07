@@ -13,28 +13,21 @@
 //const TARGET_WIDTH = 4;
 //const TARGET_HEIGHT = 4;
 
-function BreakableWall(spriteTexture, pos, immobile) {
+function BreakableWall(spriteTexture) {
 
     this.mBreakableWall = new SpriteRenderable(spriteTexture);
     this.mBreakableWall.setColor([1, 1, 1, 0]);
-    this.mBreakableWall.getXform().setPosition(pos[0], pos[1]);
-    this.mBreakableWall.getXform().setSize(5,5);
     this.mBreakableWall.setElementPixelPositions(120, 300, 0, 180);
     GameObject.call(this, this.mBreakableWall);
     
-    
-    var r = new RigidRectangle(this.getXform(), 5, 5);
+    var r = new RigidRectangle(this.mBreakableWall.getXform(), 10, 10);  
     this.setRigidBody(r);
-    if(immobile) {
-        r.setMass(0);
-    }
-//    this.mMoveSpeed = 1;
-    //this.mX = 8;           //Width
-    //this.mY = 8;          //Height
-//    this.mShakePosition = new ShakePosition(0, 0, 0, 0);
+    //this.toggleDrawRenderable();
+   // this.toggleDrawRigidShape();
 }
 gEngine.Core.inheritPrototype(BreakableWall, GameObject);
 
 BreakableWall.prototype.update = function () {
     GameObject.prototype.update.call(this);
+    
 };
