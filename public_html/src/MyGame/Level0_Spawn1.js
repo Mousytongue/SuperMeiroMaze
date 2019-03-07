@@ -8,7 +8,7 @@
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObj, mGlobalSpeed ect */
 /* find out more about jslint: http://www.jslint.com/help.html */
-"use strict"
+"use strict";
 
 Level0.prototype.SpawnWorld1 = function () {
     this.Spawn2Init();
@@ -60,6 +60,10 @@ Level0.prototype.SpawnWorld1 = function () {
                 this.spawnWallLeft(j*10, 100 - (i*10));
             if (this.mWorldArray[i][j] === "_")
                 this.spawnRigidWall(j*10, 100 - (i*10), 0);
+            if (this.mWorldArray[i][j] === "h")
+                this.spawnHealth(j*10, 100 - (i*10), 0);
+            if (this.mWorldArray[i][j] === "e")
+                this.spawnEnergy(j*10, 100 - (i*10), 0);
             
             
         }
@@ -89,4 +93,6 @@ Level0.prototype.Spawn1Init = function () {
     this.mMissileSet = new GameObjectSet();
     this.mTargetSet = new GameObjectSet();
     this.mBreakableSet = new GameObjectSet();  
+    this.mHealthSet = new GameObjectSet();
+    this.mEnergySet = new GameObjectSet();
 };

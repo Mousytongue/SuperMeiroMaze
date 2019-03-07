@@ -8,7 +8,7 @@
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObj, mGlobalSpeed ect */
 /* find out more about jslint: http://www.jslint.com/help.html */
-"use strict"
+"use strict";
 
 Level0.prototype.spawnWall = function (x, y){
     var mWall = new Wall(this.kWallTexture);
@@ -88,4 +88,18 @@ Level0.prototype.missileSpawn = function(spawnPos) {
     missile.setDirection(target);
     this.mMissileSet.addToSet(missile);
     this.mTargetSet.addToSet(new Target(this.kTargetSprite, target));
+};
+
+Level0.prototype.healthSpawn = function(spawnPos) {
+    var mHealth = new HealthPowerUp(this.kMinionSprite);
+        mHealth.setXCenter(spawnPos[0]);
+        mHealth.setYCenter(spawnPos[1]);
+        this.mDoorObjects.addToSet(mHealth);
+};
+
+Level0.prototype.energySpawn = function(spawnPos) {
+    var mEnergy = new EnergyPowerUp(this.kMinionSprite);
+        mEnergy.setXCenter(spawnPos[0]);
+        mEnergy.setYCenter(spawnPos[1]);
+        this.mDoorObjects.addToSet(mEnergy);
 };

@@ -39,6 +39,8 @@ function Level0() {
     this.mMissileSet = null;
     this.mTargetSet = null;
     this.mBreakableSet = null;
+    this.mHealthSet = null;
+    this.mEnergySet = null;
     
     //Testing 2d array for world generation
     this.mWorldArray = [];
@@ -230,7 +232,25 @@ Level0.prototype.detectCollide = function() {
                 this.mTargetSet.removeFromSet(target);
             }          
         }        
-    }   
+    }
+    
+    for (var i = 0; i < this.mHealthSet.size(); i++){
+        var health = this.mHealthSet.getObjectAt(i);
+        if (this.mHero.pixelTouches(health,h)){
+            this.mHealthSet.removeFromSet(health);
+            this.UIHealth.incCurrentHP(10);
+            break;
+        }
+    }
+    
+    for (var i = 0; i < this.mEnergySet.size(); i++){
+        var energy = this.mEnergySet.getObjectAt(i);
+        if (this.mHero.pixelTouches(energy,h)){
+            this.UIEnergy.incCurrentHP(10);
+            this.mEnergySet.removeFromSet(energy);
+            break;
+        }
+    }
 };
 
 Level0.prototype.resetPosition = function() {

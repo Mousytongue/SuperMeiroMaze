@@ -59,7 +59,10 @@ Level0.prototype.SpawnWorld2 = function () {
                 this.spawnWallLeft(j*10, 100 - (i*10));
             if (this.mWorldArray[i][j] === "_")
                 this.spawnRigidWall(j*10, 100 - (i*10), 0);
-            
+            if (this.mWorldArray[i][j] === "h")
+                this.spawnHealth(j*10, 100 - (i*10), 0);
+            if (this.mWorldArray[i][j] === "e")
+                this.spawnEnergy(j*10, 100 - (i*10), 0);
             
         }
     }   
@@ -87,4 +90,6 @@ Level0.prototype.Spawn2Init = function (){
     this.mMissileSet = new GameObjectSet();
     this.mTargetSet = new GameObjectSet();
     this.mBreakableSet = new GameObjectSet();
+    this.mHealthSet = new GameObjectSet();
+    this.mEnergySet = new GameObjectSet();
 };

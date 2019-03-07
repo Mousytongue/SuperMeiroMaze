@@ -29,5 +29,4 @@ gEngine.Core.inheritPrototype(BreakableWall, GameObject);
 
 BreakableWall.prototype.update = function () {
     GameObject.prototype.update.call(this);
-    
 };
