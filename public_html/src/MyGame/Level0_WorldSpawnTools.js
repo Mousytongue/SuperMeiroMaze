@@ -51,7 +51,7 @@ Level0.prototype.spawnWallLeft = function (x, y){
 };
 
 Level0.prototype.spawnDestructWall = function (x, y){
-        var mWall = new BreakableWall(this.kMinionSprite);
+        var mWall = new BreakableWall(this.kBreakableSprite);
         mWall.getXform().setSize(10,10);
         mWall.getXform().setPosition(x, y);
         this.mBreakableSet.addToSet(mWall);
