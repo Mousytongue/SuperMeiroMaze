@@ -40,14 +40,20 @@ Hero.prototype.update = function (mCamera) {
     
     //WASD controls
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W))
+    {
+        if (mCurrentPos[1] < 85)
         xform.incYPosBy(this.mMoveSpeed);
+    }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A))
     {
         if (mCurrentPos[0] > mCameraPos[0] - 45)
         xform.incXPosBy(-this.mMoveSpeed / 1.5);
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S))
+    {
+        if (mCurrentPos[1] > 18)
         xform.incYPosBy(-this.mMoveSpeed);
+    }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D))
     {
         if(mCurrentPos[0] < mCameraPos[0] + 45)

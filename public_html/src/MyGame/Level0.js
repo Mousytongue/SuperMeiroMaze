@@ -22,6 +22,7 @@ function Level0() {
     this.kTargetSprite = "assets/OpenSource/target.png";
     this.kShipSprite = "assets/OpenSource/player_plane.png";
     this.kMissileSprite = "assets/OpenSource/shot.png";
+    this.kBreakableSprite = "assets/OpenSource/BreakableWall.png";
     
     // The camera to view the scene
     this.mCamera = null;
@@ -58,6 +59,7 @@ Level0.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kTargetSprite);
     gEngine.Textures.loadTexture(this.kShipSprite);
     gEngine.Textures.loadTexture(this.kMissileSprite);
+    gEngine.Textures.loadTexture(this.kBreakableSprite);
 };
 
 Level0.prototype.unloadScene = function () {
@@ -71,6 +73,7 @@ Level0.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kTargetSprite);
     gEngine.Textures.unloadTexture(this.kShipSprite);
     gEngine.Textures.unloadTexture(this.kMissileSprite);
+    gEngine.Textures.unloadTexture(this.kBreakableSprite);
     
     if(this.LevelSelect==="Level1"){
         gEngine.Core.startScene(new Level1());
@@ -148,8 +151,9 @@ Level0.prototype.update = function () {
     //gEngine.ParticleSystem.collideWithRigidSet(this.mBreakableSet, this.mAllParticles);
     
     
+    console.log(this.mHero.getXform().getPosition());
     //Detect if person is ready to spawn next world
-    if (this.mHero.getXform().getXPos() > 100){
+    if (this.mHero.getXform().getXPos() > 450){
         if (this.LevelCounter === 1)
         {   
             this.SpawnWorld2();
