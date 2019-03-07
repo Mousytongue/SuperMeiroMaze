@@ -41,7 +41,7 @@ function Level0() {
     
     //Testing 2d array for world generation
     this.mWorldArray = [];
-    
+    this.LevelCounter = 0;
     mGlobalSpeed = 1.0;
 }
 gEngine.Core.inheritPrototype(Level0, Scene);
@@ -84,38 +84,15 @@ Level0.prototype.unloadScene = function () {
 };
 
 Level0.prototype.initialize = function () {
-    // Step A: set up the cameras
-    this.mCamera = new Camera(
-        vec2.fromValues(30, 50), // position of the camera
-        100,                     // width of camera
-        [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
-    );
-    this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
-            // sets the background to gray
-    gEngine.DefaultResources.setGlobalAmbientIntensity(3);
-    
     //UI
     this.UIHealth = new UIHealthBar(this.kHealthBar,[175,575],[300,20],0);
     this.UIEnergy = new UIHealthBar(this.kEnergyBar,[175,550],[300,20],0);
+
     
-    //Background
-    this.mBg = new TextureRenderable(this.kBG);
-    this.mBg.getXform().setSize(200,160);
-    this.mBg.getXform().setPosition(30,20);
-    
-    //Hero objects
-    this.mHero = new Hero(this.kShipSprite);
-    this.mReticle = new Reticle(this.kReticleSprite);  
-    
-    //World object sets
-    this.mWorldObjects = new GameObjectSet();
-    this.mDoorObjects = new GameObjectSet();
-    this.mMissileSet = new GameObjectSet();
-    this.mTargetSet = new GameObjectSet();
-    this.mBreakableSet = new GameObjectSet();
-    
-    //Create world
-    this.worldSpawn();
+    //Hero/World/Camera/Background will be recreated within each new spawn world call
+    //Spawn world 1
+    this.SpawnWorld1();
+    this.LevelCounter++;
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -127,12 +104,11 @@ Level0.prototype.draw = function () {
     this.mBg.draw(this.mCamera);
     this.UIHealth.draw(this.mCamera);
     this.UIEnergy.draw(this.mCamera);
-    // console.log(this.mReticle);
     this.mMissileSet.draw(this.mCamera);
-    this.mTargetSet.draw(this.mCamera);
-    this.mBreakableSet.draw(this.mCamera);
+    this.mTargetSet.draw(this.mCamera);    
     this.mHero.draw(this.mCamera);
     this.mDoorObjects.draw(this.mCamera);
+    this.mBreakableSet.draw(this.mCamera);
     this.mWorldObjects.draw(this.mCamera); 
     this.mReticle.draw(this.mCamera);
 };
@@ -146,6 +122,7 @@ Level0.prototype.update = function () {
     this.mCamera.update();
     this.mReticle.update(this.mCamera);
     this.mMissileSet.update();
+    this.mBreakableSet.update();
     this.panLevel();
     this.detectCollide();
     
@@ -153,11 +130,10 @@ Level0.prototype.update = function () {
     if (this.UIHealth.getCurrentHP() === 0)
         this.restart();
     
-    
     //Global slow
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)){
         mGlobalSpeed = 0.5;
-        this.energyDown(0.2);
+        this.UIEnergy.incCurrentHP(-.2);
     }
     if(gEngine.Input.isKeyReleased(gEngine.Input.keys.Space))
         mGlobalSpeed = 1.0;
@@ -166,6 +142,22 @@ Level0.prototype.update = function () {
     if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left)) {
         this.missileSpawn(this.mHero.getXform().getPosition());      
     }
+    
+    //Physics and particles
+    gEngine.Physics.processCollision(this.mBreakableSet, this.mCollisionInfos);
+    //gEngine.ParticleSystem.collideWithRigidSet(this.mBreakableSet, this.mAllParticles);
+    
+    
+    //Detect if person is ready to spawn next world
+    if (this.mHero.getXform().getXPos() > 100){
+        if (this.LevelCounter === 1)
+        {   
+            this.SpawnWorld2();
+            this.LevelCounter++;
+        }
+        
+    }
+    
 };
 
 Level0.prototype.detectCollide = function() {
@@ -173,8 +165,7 @@ Level0.prototype.detectCollide = function() {
   for (var i = 0; i < this.mWorldObjects.size(); i++){
         if(!this.mHero.isInvunerable()){
            if (this.mHero.pixelTouches(this.mWorldObjects.getObjectAt(i), h)){
-                this.hpDown(34);
-                this.resetPosition();
+                this.UIHealth.incCurrentHP(-10);
                 this.mHero.setInvunerable(180);
                 break;
             }
@@ -187,7 +178,7 @@ Level0.prototype.detectCollide = function() {
             var mBotSet = mCurrentSet.getBotSet();
             for (var j = 0; j < mTopSet.length; j++){
                 if (this.mHero.pixelTouches(mTopSet[j], h) || this.mHero.pixelTouches(mBotSet[j], h)){
-                    this.hpDown(34);
+                    this.UIHealth.incCurrentHP(-10); 
                     this.mHero.setInvunerable(180);
                     break;
                 }
@@ -198,7 +189,7 @@ Level0.prototype.detectCollide = function() {
       if(!this.mHero.isInvunerable()){
           var wall = this.mBreakableSet.getObjectAt(i);
           if (this.mHero.pixelTouches(wall,h)){
-              this.hpDown(34);
+              this.UIHealth.incCurrentHP(-10);
               this.mHero.setInvunerable(180);
               break;
           }
@@ -245,7 +236,7 @@ Level0.prototype.resetPosition = function() {
 
 Level0.prototype.panLevel = function () {
     //Camera
-    this.mCamera.panBy(this.mPanSpeed * 10 * mGlobalSpeed, 0.0);
+    this.mCamera.panBy((this.mPanSpeed * 10) * mGlobalSpeed, 0.0);
     //Hero
     this.mHero.getXform().incXPosBy(this.mPanSpeed * mGlobalSpeed);
     //Background
@@ -271,181 +262,3 @@ Level0.prototype.restart = function(){
   this.LevelSelect="MyGame";
   gEngine.GameLoop.stop();
 };
-
-Level0.prototype.hpUp = function (n){
-    this.UIHealth.incCurrentHP(n);  
-};
-
-Level0.prototype.hpDown = function (n){
-    this.UIHealth.incCurrentHP(-n);  
-};
-
-Level0.prototype.energyUp = function (n){
-    this.UIEnergy.incCurrentHP(n);  
-};
-
-Level0.prototype.energyDown = function (n){
-    this.UIEnergy.incCurrentHP(-n);  
-};
-
-Level0.prototype.worldSpawn = function () {
-    //1 = regular wall
-    //r = right slanted wall
-    //t = left slanted wall
-    //2 = destructable wall
-    //3 = small closing door  
-    //4 = large closing door   
-    //5 = lazers! or falling rocks, TBD
-    
-    var Row0 = "1111111111111111111111111111111111111111111111";  //Unseen, above camera
-    var Row1 = "1111111111111111111111111111111111111111111111";
-    var Row2 = "00000220000000000000000000000000000t0000000000";
-    var Row3 = "000002200003330033300333000000000000t000000000";
-    var Row4 = "00000220000000000000000000000000r000010000r000";
-    var Row5 = "0000022040111111111111111040000r0000r0000r00000";
-    var Row6 = "000002200000000000000000000000r0000r0000r00000";
-    var Row7 = "00000220000333003330033300000r000000000r000000";
-    var Row8 = "0000022000000000000000000000r000000000r0000000";
-    var Row9 = "1111111111111111111111111111111111111111111111";
-    var Ro10 = "1111111111111111111111111111111111111111111111"; //Unseen, below camera
-    this.mWorldArray[0] = Row0.split("");
-    this.mWorldArray[1] = Row1.split("");
-    this.mWorldArray[2] = Row2.split("");
-    this.mWorldArray[3] = Row3.split("");
-    this.mWorldArray[4] = Row4.split("");
-    this.mWorldArray[5] = Row5.split("");
-    this.mWorldArray[6] = Row6.split("");
-    this.mWorldArray[7] = Row7.split("");
-    this.mWorldArray[8] = Row8.split("");
-    this.mWorldArray[9] = Row9.split("");
-    this.mWorldArray[10] = Ro10.split("");
-  
-    for (var i = 0; i <this.mWorldArray.length; i++){
-        for (var j = 0; j < this.mWorldArray[i].length; j++){
-            if (this.mWorldArray[i][j] === "1")
-                this.spawnWall(j*10, 100 - (i*10));
-            if (this.mWorldArray[i][j] === "2")
-                this.spawnDestructWall(j*10, 100 - (i*10));
-            if (this.mWorldArray[i][j] === "3")
-                this.spawnSmallDoor(j*10, 100 - (i*10), j*10);
-            if (this.mWorldArray[i][j] === "4")
-                this.spawnLargeDoor(j*10, 100 - (i*10), j*10);
-            if (this.mWorldArray[i][j] === "r")
-                this.spawnWallRight(j*10, 100 - (i*10));
-             if (this.mWorldArray[i][j] === "t")
-                this.spawnWallLeft(j*10, 100 - (i*10));
-        }
-    }
-
-    
-    
-    //Walls
-   // for (var i = 0; i < 10 ; i++){
-   //     var mTopWall = new Wall(this.kWallTexture);
-   //     mTopWall.getXform().setSize(100,100);
-   //     mTopWall.getXform().setPosition(100 * i,120);    
-   //     this.mWorldObjects.addToSet(mTopWall);
-    
-   //     var mBotWall = new Wall(this.kWallTexture);
-    //    mBotWall.getXform().setSize(100,100);
-    //    mBotWall.getXform().setPosition(100 * i,-40);    
-    //    this.mWorldObjects.addToSet(mBotWall);
-   // }
-    
-    //First Set of doors
-    //for (var i = 0; i < 20; i++){
-    //    var mDoor = new MovingDoor(this.kMinionSprite);
-    //    mDoor.setXCenter(300 + (10*i));
-    //    mDoor.setInitialDelay(30 + (20*i));
-   //     this.mDoorObjects.addToSet(mDoor);
-   // }
-    
-    //Breakable wall
-   // for (var i = 0; i < 15; i++){
-   //      this.mBreakableSet.addToSet(
-   //              new BreakableWall(this.kMinionSprite, vec2.fromValues(100, 5 +(i*5))));
-   //      this.mBreakableSet.addToSet(
-    //             new BreakableWall(this.kMinionSprite, vec2.fromValues(105, 5 +(i*5))));
-   //      this.mBreakableSet.addToSet(
-    //             new BreakableWall(this.kMinionSprite, vec2.fromValues(110, 5 +(i*5))));
-         
-    //     this.mBreakableSet.addToSet(
-    //             new BreakableWall(this.kMinionSprite, vec2.fromValues(150, 5 +(i*5))));
-    //     this.mBreakableSet.addToSet(
-    //             new BreakableWall(this.kMinionSprite, vec2.fromValues(155, 5 +(i*5))));
-    //     this.mBreakableSet.addToSet(
-    //             new BreakableWall(this.kMinionSprite, vec2.fromValues(160, 5 +(i*5))));
-         
-    //     this.mBreakableSet.addToSet(
-    //             new BreakableWall(this.kMinionSprite, vec2.fromValues(200, 5 +(i*5))));
-    //     this.mBreakableSet.addToSet(
-    //             new BreakableWall(this.kMinionSprite, vec2.fromValues(205, 5 +(i*5))));
-    //     this.mBreakableSet.addToSet(
-    //             new BreakableWall(this.kMinionSprite, vec2.fromValues(210, 5 +(i*5))));
-    //}
-   
-};
-
-Level0.prototype.missileSpawn = function(spawnPos) {
-    var mCamX = this.mCamera.mouseWCX();
-    var mCamY = this.mCamera.mouseWCY();
-    if (mCamY > 110)
-            mCamY = 110;
-    if (mCamY < -35)
-        mCamY = -35;
-    var target = vec2.fromValues(mCamX, mCamY);
-    console.log(target);
-      
-    var missile = new Missile(this.kMissileSprite, spawnPos);
-    missile.setDirection(target);
-    this.mMissileSet.addToSet(missile);
-    this.mTargetSet.addToSet(new Target(this.kTargetSprite, target));
-};
-
-Level0.prototype.spawnWall = function (x, y){
-    var mTopWall = new Wall(this.kWallTexture);
-        mTopWall.getXform().setSize(10,10);
-        mTopWall.getXform().setPosition(x, y);    
-        this.mWorldObjects.addToSet(mTopWall);
-};
-
-Level0.prototype.spawnWallRight = function (x, y){
-    var mTopWall = new Wall(this.kWallTexture);
-        mTopWall.getXform().setSize(10,20);
-        mTopWall.getXform().setPosition(x, y);  
-        mTopWall.getXform().setRotationInDegree(-45); 
-        this.mWorldObjects.addToSet(mTopWall);
-};
-
-Level0.prototype.spawnWallLeft = function (x, y){
-    var mTopWall = new Wall(this.kWallTexture);
-        mTopWall.getXform().setSize(10,20);
-        mTopWall.getXform().setPosition(x, y);  
-        mTopWall.getXform().setRotationInDegree(45); 
-        this.mWorldObjects.addToSet(mTopWall);
-};
-
-
-
-Level0.prototype.spawnDestructWall = function (x, y){
-    this.mBreakableSet.addToSet(
-            new BreakableWall(this.kMinionSprite, vec2.fromValues(x, y)));
-};
-
-Level0.prototype.spawnSmallDoor = function (x, y, d) {
-        var mDoor = new MovingDoor(this.kMinionSprite);
-        mDoor.setXCenter(x);
-        mDoor.setYCenter(y);
-        mDoor.setHeight(40);
-        mDoor.setInitialDelay(d);
-        this.mDoorObjects.addToSet(mDoor);
-};
-
-Level0.prototype.spawnLargeDoor = function (x, y, d) {
-        var mDoor = new MovingDoor(this.kMinionSprite);
-        mDoor.setXCenter(x);
-        mDoor.setYCenter(y);
-        mDoor.setInitialDelay(d);
-        this.mDoorObjects.addToSet(mDoor);
-};
-

@@ -54,8 +54,8 @@ MyGame.prototype.initialize = function () {
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
     
     this.StartGameButton = new UIButton(this.kUIButton,this.StartGameSelect,this,[400,400],[600,100],"Start Game",8,[1,1,1,1],[0,0,0,1]);
-    this.LevelSelectButton = new UIButton(this.kUIButton,this.LevelSelect,this,[400,300],[750,100],"Level Select (N/A)",8,[1,1,1,1],[0,0,0,1]);
-    this.HighScoresButton =  new UIButton(this.kUIButton,this.HighScoresSelect,this,[400,200],[750,100],"High Scores (N/A)",8,[1,1,1,1],[0,0,0,1]);
+    //this.LevelSelectButton = new UIButton(this.kUIButton,this.LevelSelect,this,[400,300],[750,100],"Level Select (N/A)",8,[1,1,1,1],[0,0,0,1]);
+    //this.HighScoresButton =  new UIButton(this.kUIButton,this.HighScoresSelect,this,[400,200],[750,100],"High Scores (N/A)",8,[1,1,1,1],[0,0,0,1]);
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -67,15 +67,15 @@ MyGame.prototype.draw = function () {
     
     this.mCamera.setupViewProjection();
     this.StartGameButton.draw(this.mCamera);
-    this.LevelSelectButton.draw(this.mCamera);
-    this.HighScoresButton.draw(this.mCamera);
+    //this.LevelSelectButton.draw(this.mCamera);
+    //this.HighScoresButton.draw(this.mCamera);
     //this.UIText.draw(this.mCamera);
 };
 
 MyGame.prototype.update = function () {
     this.StartGameButton.update();
-    this.LevelSelectButton.update();
-    this.HighScoresButton.update();
+    //this.LevelSelectButton.update();
+    //this.HighScoresButton.update();
 };
 
 MyGame.prototype.StartGameSelect = function(){

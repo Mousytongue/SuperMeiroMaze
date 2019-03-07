@@ -44,7 +44,7 @@ Hero.prototype.update = function (mCamera) {
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A))
     {
         if (mCurrentPos[0] > mCameraPos[0] - 45)
-        xform.incXPosBy(-this.mMoveSpeed / 1.8);
+        xform.incXPosBy(-this.mMoveSpeed / 1.5);
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S))
         xform.incYPosBy(-this.mMoveSpeed);
