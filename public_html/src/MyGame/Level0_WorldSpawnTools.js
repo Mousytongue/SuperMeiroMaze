@@ -17,21 +17,11 @@ Level0.prototype.spawnWall = function (x, y){
         this.mWorldObjects.addToSet(mWall);
 };
 
-Level0.prototype.spawnRigidWall = function (x, y, rot) {
-    var p = new TextureRenderable(this.kWallTexture);
-    var xf = p.getXform();
-    
-    var g = new GameObject(p);
-    var r = new RigidRectangle(xf, 10, 10);
-    g.setRigidBody(r);
-    //g.toggleDrawRenderable();
-    g.toggleDrawRigidShape();
-    
-    r.setMass(0);
-    xf.setSize(10, 10);
-    xf.setPosition(x, y);
-    xf.setRotationInDegree(rot);
-    this.mBreakableSet.addToSet(g);
+Level0.prototype.spawnRigidWall = function (x, y) {
+    var mWall = new RigidWall(this.kWallTexture);
+    mWall.getXform().setSize(10,10);
+    mWall.getXform().setPosition(x, y); 
+    this.mBreakableSet.addToSet(mWall);
 };
 
 Level0.prototype.spawnWallRight = function (x, y){
@@ -88,4 +78,12 @@ Level0.prototype.missileSpawn = function(spawnPos) {
     missile.setDirection(target);
     this.mMissileSet.addToSet(missile);
     this.mTargetSet.addToSet(new Target(this.kTargetSprite, target));
+};
+
+Level0.prototype.spawnFallingRocks = function(x, y){
+  var mRock = new RockSpawner(this.kBreakableSprite, this.kFallingRock, this.mBreakableSet);
+  mRock.getXform().setXPos(x);
+  mRock.getXform().setYPos(y);
+  mRock.getXform().setSize(10,10);
+  this.mWorldObjects.addToSet(mRock);
 };
