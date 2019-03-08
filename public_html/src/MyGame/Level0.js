@@ -23,6 +23,7 @@ function Level0() {
     this.kShipSprite = "assets/OpenSource/player_plane.png";
     this.kMissileSprite = "assets/OpenSource/shot.png";
     this.kBreakableSprite = "assets/OpenSource/BreakableWall.png";
+    this.kFallingRock = "assets/OpenSource/boulder2.png";
     
     // The camera to view the scene
     this.mCamera = null;
@@ -39,6 +40,7 @@ function Level0() {
     this.mMissileSet = null;
     this.mTargetSet = null;
     this.mBreakableSet = null;
+    this.mRigidSet = null;
     
     //Testing 2d array for world generation
     this.mWorldArray = [];
@@ -60,6 +62,7 @@ Level0.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kShipSprite);
     gEngine.Textures.loadTexture(this.kMissileSprite);
     gEngine.Textures.loadTexture(this.kBreakableSprite);
+    gEngine.Textures.loadTexture(this.kFallingRock);
 };
 
 Level0.prototype.unloadScene = function () {
@@ -74,6 +77,7 @@ Level0.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kShipSprite);
     gEngine.Textures.unloadTexture(this.kMissileSprite);
     gEngine.Textures.unloadTexture(this.kBreakableSprite);
+    gEngine.Textures.unloadTexture(this.kFallingRock);
     
     if(this.LevelSelect==="Level1"){
         gEngine.Core.startScene(new Level1());
@@ -126,6 +130,7 @@ Level0.prototype.update = function () {
     this.mReticle.update(this.mCamera);
     this.mMissileSet.update();
     this.mBreakableSet.update();
+    this.mWorldObjects.update();
     this.panLevel();
     this.detectCollide();
     
@@ -148,10 +153,10 @@ Level0.prototype.update = function () {
     
     //Physics and particles
     gEngine.Physics.processCollision(this.mBreakableSet, this.mCollisionInfos);
-    //gEngine.ParticleSystem.collideWithRigidSet(this.mBreakableSet, this.mAllParticles);
+    //gEngine.ParticleSystem.collideWithRigidSet(this.mBreakableSet, this.mRigidSet);
     
     
-    console.log(this.mHero.getXform().getPosition());
+    //console.log(this.mHero.getXform().getPosition());
     //Detect if person is ready to spawn next world
     if (this.mHero.getXform().getXPos() > 450){
         if (this.LevelCounter === 1)
@@ -192,6 +197,12 @@ Level0.prototype.detectCollide = function() {
   for (var i = 0; i < this.mBreakableSet.size(); i++){
       if(!this.mHero.isInvunerable()){
           var wall = this.mBreakableSet.getObjectAt(i);
+          if (wall.IsDead() === true)
+          {
+              console.log("IsDead reached");
+              this.mBreakableSet.removeFromSet(wall);
+              break;
+          }
           if (this.mHero.pixelTouches(wall,h)){
               this.UIHealth.incCurrentHP(-10);
               this.mHero.setInvunerable(180);
@@ -215,7 +226,6 @@ Level0.prototype.detectCollide = function() {
             yDiff *= -1;
         var tDiff = xDiff+yDiff;
       
-        //console.log(tDiff);
         if(tDiff < 1) {
             this.mMissileSet.removeFromSet(missile);
             this.mTargetSet.removeFromSet(target);
@@ -224,7 +234,8 @@ Level0.prototype.detectCollide = function() {
         for(var j = 0; j < this.mBreakableSet.size(); ++j) {
             var wall = this.mBreakableSet.getObjectAt(j);
             if(missile.pixelTouches(wall, h)) {
-                this.mBreakableSet.removeFromSet(wall);
+                console.log("missle touched breakable");
+                wall.MarkDead();
                 this.mMissileSet.removeFromSet(missile);
                 this.mTargetSet.removeFromSet(target);
             }          

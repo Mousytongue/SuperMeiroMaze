@@ -13,29 +13,30 @@
 //const TARGET_WIDTH = 4;
 //const TARGET_HEIGHT = 4;
 
-function BreakableWall(spriteTexture) {
+function RigidWall(spriteTexture) {
     this.mIsDead = false;
-    this.mBreakableWall = new SpriteRenderable(spriteTexture);
-    this.mBreakableWall.setColor([1, 1, 1, 0]);
-    this.mBreakableWall.setElementPixelPositions(120, 300, 0, 180);
-    GameObject.call(this, this.mBreakableWall);
+    this.mRigidWall = new SpriteRenderable(spriteTexture);
+    this.mRigidWall.setColor([1, 1, 1, 0]);
+    this.mRigidWall.setElementPixelPositions(120, 300, 0, 180);
+    GameObject.call(this, this.mRigidWall);
     
-    var r = new RigidRectangle(this.mBreakableWall.getXform(), 10, 10);  
+    var r = new RigidRectangle(this.mRigidWall.getXform(), 10, 10);  
     this.setRigidBody(r);
+    r.setMass(0);
     //this.toggleDrawRenderable();
    // this.toggleDrawRigidShape();
 }
-gEngine.Core.inheritPrototype(BreakableWall, GameObject);
+gEngine.Core.inheritPrototype(RigidWall, GameObject);
 
-BreakableWall.prototype.update = function () {
+RigidWall.prototype.update = function () {
     GameObject.prototype.update.call(this);
     
 };
 
-BreakableWall.prototype.IsDead = function () {
+RigidWall.prototype.IsDead = function () {
   return this.mIsDead;  
 };
 
-BreakableWall.prototype.MarkDead = function (){
+RigidWall.prototype.MarkDead = function (){
     this.mIsDead = true;
 };
