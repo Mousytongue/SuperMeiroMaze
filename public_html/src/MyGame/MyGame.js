@@ -11,7 +11,8 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 var mGlobalSpeed = null;
-
+var mScreenX = 1300;
+var mScreenY = 700;
 function MyGame() {
     this.kUIButton = "assets/UI/button.png";
     
@@ -47,7 +48,7 @@ MyGame.prototype.initialize = function () {
     this.mCamera = new Camera(
         vec2.fromValues(50, 40), // position of the camera
         200,                     // width of camera
-        [0, 0, 1600, 800]         // viewport (orgX, orgY, width, height)
+        [0, 0, mScreenX, mScreenY]         // viewport (orgX, orgY, width, height)
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
             // sets the background to gray

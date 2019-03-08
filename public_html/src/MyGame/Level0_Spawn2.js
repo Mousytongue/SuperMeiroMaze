@@ -69,7 +69,7 @@ Level0.prototype.Spawn2Init = function (){
     this.mCamera = new Camera(
         vec2.fromValues(30, 50), // position of the camera
         200,                     // width of camera
-        [0, 0, 1600, 800]         // viewport (orgX, orgY, width, height)
+        [0, 0, mScreenX, mScreenY]         // viewport (orgX, orgY, width, height)
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
             // sets the background to gray
@@ -77,7 +77,7 @@ Level0.prototype.Spawn2Init = function (){
            
     //Background
     this.mBg = new TextureRenderable(this.kBG);
-    this.mBg.getXform().setSize(200,160);
+    this.mBg.getXform().setSize(200,180);
     this.mBg.getXform().setPosition(30,20);
     
     this.mHero = new Hero(this.kShipSprite);
