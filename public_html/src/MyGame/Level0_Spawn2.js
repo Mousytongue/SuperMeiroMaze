@@ -68,8 +68,8 @@ Level0.prototype.SpawnWorld2 = function () {
 Level0.prototype.Spawn2Init = function (){
     this.mCamera = new Camera(
         vec2.fromValues(30, 50), // position of the camera
-        100,                     // width of camera
-        [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
+        200,                     // width of camera
+        [0, 0, 1600, 800]         // viewport (orgX, orgY, width, height)
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
             // sets the background to gray
