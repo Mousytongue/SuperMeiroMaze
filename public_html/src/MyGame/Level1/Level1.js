@@ -11,7 +11,7 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function Level0() {
+function Level1() {
     this.kUIButton = "assets/UI/button.png";
     this.kHealthBar = "assets/UI/healthbar.png";
     this.kEnergyBar = "assets/UI/energybar.png";
@@ -24,6 +24,7 @@ function Level0() {
     this.kMissileSprite = "assets/OpenSource/shot.png";
     this.kBreakableSprite = "assets/OpenSource/BreakableWall.png";
     this.kFallingRock = "assets/OpenSource/boulder2.png";
+    this.kNinjaStar = "assets/OpenSource/stockphoto_NinjaStar.png";
     
     // The camera to view the scene
     this.mCamera = null;
@@ -45,12 +46,11 @@ function Level0() {
     //Testing 2d array for world generation
     this.mWorldArray = [];
     this.LevelCounter = 0;
-    mGlobalSpeed = 1.0;
 }
-gEngine.Core.inheritPrototype(Level0, Scene);
+gEngine.Core.inheritPrototype(Level1, Scene);
 
 
-Level0.prototype.loadScene = function () {
+Level1.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kUIButton);
     gEngine.Textures.loadTexture(this.kHealthBar);
     gEngine.Textures.loadTexture(this.kEnergyBar);
@@ -63,9 +63,10 @@ Level0.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kMissileSprite);
     gEngine.Textures.loadTexture(this.kBreakableSprite);
     gEngine.Textures.loadTexture(this.kFallingRock);
+    gEngine.Textures.loadTexture(this.kNinjaStar);
 };
 
-Level0.prototype.unloadScene = function () {
+Level1.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kUIButton);
     gEngine.Textures.unloadTexture(this.kHealthBar);
     gEngine.Textures.unloadTexture(this.kEnergyBar);
@@ -78,9 +79,13 @@ Level0.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kMissileSprite);
     gEngine.Textures.unloadTexture(this.kBreakableSprite);
     gEngine.Textures.unloadTexture(this.kFallingRock);
+    gEngine.Textures.unloadTexture(this.kNinjaStar);
     
     if(this.LevelSelect==="Level1"){
         gEngine.Core.startScene(new Level1());
+    }
+    if(this.LevelSelect==="Level2"){
+        gEngine.Core.startScene(new Level2());
     }
     if(this.LevelSelect==="Gameover"){
         gEngine.Core.startScene(new GameOver());
@@ -90,10 +95,10 @@ Level0.prototype.unloadScene = function () {
     }
 };
 
-Level0.prototype.initialize = function () {
+Level1.prototype.initialize = function () {
     //UI
-    this.UIHealth = new UIHealthBar(this.kHealthBar,[175,575],[300,20],0);
-    this.UIEnergy = new UIHealthBar(this.kEnergyBar,[175,550],[300,20],0);
+    this.UIHealth = new UIHealthBar(this.kHealthBar,[175,675],[300,20],0);
+    this.UIEnergy = new UIHealthBar(this.kEnergyBar,[175,650],[300,20],0);
 
     
     //Hero/World/Camera/Background will be recreated within each new spawn world call
@@ -104,7 +109,7 @@ Level0.prototype.initialize = function () {
 
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
-Level0.prototype.draw = function () {
+Level1.prototype.draw = function () {
     // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
     this.mCamera.setupViewProjection();
@@ -120,7 +125,7 @@ Level0.prototype.draw = function () {
     this.mReticle.draw(this.mCamera);
 };
 
-Level0.prototype.update = function () {
+Level1.prototype.update = function () {
     //Update Objects and UI
     this.UIHealth.update();
     this.UIEnergy.update();
@@ -136,7 +141,7 @@ Level0.prototype.update = function () {
     
     //GameOver -currently just reload MyGame
     if (this.UIHealth.getCurrentHP() === 0)
-        this.restart();
+        this.gameOver();
     
     //Global slow
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)){
@@ -161,15 +166,42 @@ Level0.prototype.update = function () {
     if (this.mHero.getXform().getXPos() > 450){
         if (this.LevelCounter === 1)
         {   
+            console.log("Spawned World 2");
             this.SpawnWorld2();
             this.LevelCounter++;
+        }
+        else if (this.LevelCounter === 2)
+        {
+            console.log("Spawned World 3");
+            this.SpawnWorld3();
+            this.LevelCounter++;
+        }
+        else if (this.LevelCounter === 3)
+        {
+            console.log("Spawned World 4");
+            this.SpawnWorld4();
+            this.LevelCounter++;
+        }
+        else if (this.LevelCounter === 4){
+            console.log("sspawned world 5");
+            this.SpawnWorld5();
+            this.LevelCounter++;
+        }
+        else if (this.LevelCounter === 5){
+            console.log("Spawn new scene");
+            this.nextLevel();
         }
         
     }
     
+    
+    //For testing purposes
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.N)) 
+        this.mHero.getXform().incXPosBy(450);  
+    
 };
 
-Level0.prototype.detectCollide = function() {
+Level1.prototype.detectCollide = function() {
   var h = [];  
   for (var i = 0; i < this.mWorldObjects.size(); i++){
         if(!this.mHero.isInvunerable()){
@@ -198,8 +230,7 @@ Level0.prototype.detectCollide = function() {
       if(!this.mHero.isInvunerable()){
           var wall = this.mBreakableSet.getObjectAt(i);
           if (wall.IsDead() === true)
-          {
-              console.log("IsDead reached");
+          {             
               this.mBreakableSet.removeFromSet(wall);
               break;
           }
@@ -243,13 +274,13 @@ Level0.prototype.detectCollide = function() {
     }   
 };
 
-Level0.prototype.resetPosition = function() {
+Level1.prototype.resetPosition = function() {
   var mCamWC = this.mCamera.getWCCenter();
   this.mHero.getXform().setPosition(mCamWC[0], mCamWC[1]);
   this.mHero.setInvunerable(180);
 };
 
-Level0.prototype.panLevel = function () {
+Level1.prototype.panLevel = function () {
     //Camera
     this.mCamera.panBy((this.mPanSpeed * 10) * mGlobalSpeed, 0.0);
     //Hero
@@ -263,17 +294,17 @@ Level0.prototype.panLevel = function () {
     
 };
 
-Level0.prototype.nextLevel = function(){
-    this.LevelSelects="Level1";
+Level1.prototype.nextLevel = function(){
+    this.LevelSelect="Level2";
     gEngine.GameLoop.stop();
 };
 
-Level0.prototype.gameOver = function(){
-    this.LevelSelect="Gameover";
+Level1.prototype.gameOver = function(){
+    this.LevelSelect="Level1";
     gEngine.GameLoop.stop();
 };
 
-Level0.prototype.restart = function(){
-  this.LevelSelect="MyGame";
+Level1.prototype.restart = function(){
+  this.LevelSelect="GameOver";
   gEngine.GameLoop.stop();
 };

@@ -19,7 +19,7 @@ function Rock(tex_rock, pos) {
     //
     this.mRock = new SpriteRenderable(tex_rock);
     this.mRock.setColor([1,1,1,0]);
-    this.mRock.setElementPixelPositions(0,64,0,64); 
+   // this.mRock.setElementPixelPositions(0,64,0,64); 
     this.mRock.getXform().setSize(5,5);
     this.mRock.getXform().setPosition(pos[0], pos[1]-3);
     GameObject.call(this, this.mRock);
@@ -35,7 +35,6 @@ Rock.prototype.update = function () {
     this.LifeCounter++;
     
     if(this.LifeCounter > this.LifeLimit){
-         console.log("Lifecounter expired");
          this.mIsDead = true;
     }
 GameObject.prototype.update.call(this);
