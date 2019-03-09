@@ -21,7 +21,7 @@ function Hero(spriteTexture) {
     this.mDye.setElementPixelPositions(0, 60, 78, 128);
     GameObject.call(this, this.mDye);
     
-    this.mMoveSpeed = 1;
+    this.mMoveSpeed = .75;
     this.mX = 9;           //Width
     this.mY = 12;          //Height
     this.mFlashing = true;
@@ -41,22 +41,22 @@ Hero.prototype.update = function (mCamera) {
     //WASD controls
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W))
     {
-        if (mCurrentPos[1] < 85)
+        if (mCurrentPos[1] < 95)
         xform.incYPosBy(this.mMoveSpeed);
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A))
     {
-        if (mCurrentPos[0] > mCameraPos[0] - 45)
-        xform.incXPosBy(-this.mMoveSpeed / 1.5);
+        if (mCurrentPos[0] > mCameraPos[0] -90)
+        xform.incXPosBy(-this.mMoveSpeed);
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S))
     {
-        if (mCurrentPos[1] > 18)
+        if (mCurrentPos[1] > 5)
         xform.incYPosBy(-this.mMoveSpeed);
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D))
     {
-        if(mCurrentPos[0] < mCameraPos[0] + 45)
+        if(mCurrentPos[0] < mCameraPos[0] + 95)
         xform.incXPosBy(this.mMoveSpeed);
     }
     

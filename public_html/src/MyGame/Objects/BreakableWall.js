@@ -22,6 +22,8 @@ function BreakableWall(spriteTexture) {
     
     var r = new RigidRectangle(this.mBreakableWall.getXform(), 10, 10);  
     this.setRigidBody(r);
+    
+    
     //this.toggleDrawRenderable();
    // this.toggleDrawRigidShape();
 }

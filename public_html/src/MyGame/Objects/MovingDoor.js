@@ -14,7 +14,7 @@
 function MovingDoor(spriteTexture) {
     GameObject.call(this, this.mDoor);
     this.mTexture = spriteTexture;
-    this.mHeight = 80;
+    this.mHeight = 100;
     this.mY = 5;
     this.mX = 10;
     this.mXCenter = 50;

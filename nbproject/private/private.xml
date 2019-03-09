@@ -13,10 +13,12 @@
         </group>
         <group name="BookSourceCode">
             <file>file:/C:/Users/Jacob/Documents/GitHub/ArmTheChildren/public_html/src/MyGame/Level0_Spawn1.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/ArmTheChildren/public_html/src/MyGame/Level0_Spawn2.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/ArmTheChildren/public_html/src/MyGame/MyGame.js</file>
             <file>file:/C:/Users/Jacob/Documents/GitHub/ArmTheChildren/public_html/index.html</file>
             <file>file:/C:/Users/Jacob/Documents/GitHub/ArmTheChildren/public_html/src/MyGame/Level0.js</file>
-            <file>file:/C:/Users/Jacob/Documents/GitHub/ArmTheChildren/public_html/src/MyGame/Objects/Hero.js</file>
             <file>file:/C:/Users/Jacob/Documents/GitHub/ArmTheChildren/public_html/src/MyGame/Level0_WorldSpawnTools.js</file>
+            <file>file:/C:/Users/Jacob/Documents/GitHub/ArmTheChildren/public_html/src/MyGame/Objects/Rock.js</file>
         </group>
     </open-files>
 </project-private>

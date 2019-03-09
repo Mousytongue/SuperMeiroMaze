@@ -10,21 +10,53 @@
 /* find out more about jslint: http://www.jslint.com/help.html */
 "use strict"
 
-Level0.prototype.spawnWall = function (x, y){
+Level2.prototype.SpawnWorldFromArray = function (){    
+    for (var i = 0; i <this.mWorldArray.length; i++){
+        for (var j = 0; j < this.mWorldArray[i].length; j++){
+            if (this.mWorldArray[i][j] === "1")
+                this.spawnWall(j*10, 100 - (i*10));
+            if (this.mWorldArray[i][j] === "2")
+                this.spawnDestructWall(j*10, 100 - (i*10));          
+            if (this.mWorldArray[i][j] === "3")
+                this.spawnSmallDoor(j*10, 100 - (i*10), j*10);
+            if (this.mWorldArray[i][j] === "4")
+                this.spawnLargeDoor(j*10, 100 - (i*10), j*10);
+            if (this.mWorldArray[i][j] === "r")
+                this.spawnWallRight(j*10, 100 - (i*10));
+             if (this.mWorldArray[i][j] === "t")
+                this.spawnWallLeft(j*10, 100 - (i*10));
+            if (this.mWorldArray[i][j] === "_")
+                this.spawnRigidWall(j*10, 100 - (i*10), 0);
+            if (this.mWorldArray[i][j] === "6")
+                this.spawnFallingRocks(j*10, 100 - (i*10));
+            if (this.mWorldArray[i][j] === "X")
+                this.spawnSaw(j*10, 100 - (i*10));
+            }
+        }
+    };
+
+Level2.prototype.spawnSaw = function (x, y) {
+  var mSaw = new Saw(this.kNinjaStar);
+  mSaw.getXform().setSize(10,10);
+  mSaw.getXform().setPosition(x, y);
+  this.mWorldObjects.addToSet(mSaw);
+};
+
+Level2.prototype.spawnWall = function (x, y){
     var mWall = new Wall(this.kWallTexture);
         mWall.getXform().setSize(10,10);
         mWall.getXform().setPosition(x, y);    
         this.mWorldObjects.addToSet(mWall);
 };
 
-Level0.prototype.spawnRigidWall = function (x, y) {
+Level2.prototype.spawnRigidWall = function (x, y) {
     var mWall = new RigidWall(this.kWallTexture);
     mWall.getXform().setSize(10,10);
     mWall.getXform().setPosition(x, y); 
     this.mBreakableSet.addToSet(mWall);
 };
 
-Level0.prototype.spawnWallRight = function (x, y){
+Level2.prototype.spawnWallRight = function (x, y){
     var mWall = new Wall(this.kWallTexture);
         mWall.getXform().setSize(10,20);
         mWall.getXform().setPosition(x, y);  
@@ -32,7 +64,7 @@ Level0.prototype.spawnWallRight = function (x, y){
         this.mWorldObjects.addToSet(mWall);
 };
 
-Level0.prototype.spawnWallLeft = function (x, y){
+Level2.prototype.spawnWallLeft = function (x, y){
     var mWall = new Wall(this.kWallTexture);
         mWall.getXform().setSize(10,20);
         mWall.getXform().setPosition(x, y);  
@@ -40,14 +72,14 @@ Level0.prototype.spawnWallLeft = function (x, y){
         this.mWorldObjects.addToSet(mWall);
 };
 
-Level0.prototype.spawnDestructWall = function (x, y){
+Level2.prototype.spawnDestructWall = function (x, y){
         var mWall = new BreakableWall(this.kBreakableSprite);
         mWall.getXform().setSize(10,10);
         mWall.getXform().setPosition(x, y);
         this.mBreakableSet.addToSet(mWall);
 };
 
-Level0.prototype.spawnSmallDoor = function (x, y, d) {
+Level2.prototype.spawnSmallDoor = function (x, y, d) {
         var mDoor = new MovingDoor(this.kMinionSprite);
         mDoor.setXCenter(x);
         mDoor.setYCenter(y);
@@ -56,7 +88,7 @@ Level0.prototype.spawnSmallDoor = function (x, y, d) {
         this.mDoorObjects.addToSet(mDoor);
 };
 
-Level0.prototype.spawnLargeDoor = function (x, y, d) {
+Level2.prototype.spawnLargeDoor = function (x, y, d) {
         var mDoor = new MovingDoor(this.kMinionSprite);
         mDoor.setXCenter(x);
         mDoor.setYCenter(y);
@@ -64,7 +96,7 @@ Level0.prototype.spawnLargeDoor = function (x, y, d) {
         this.mDoorObjects.addToSet(mDoor);
 };
 
-Level0.prototype.missileSpawn = function(spawnPos) {
+Level2.prototype.missileSpawn = function(spawnPos) {
     var mCamX = this.mCamera.mouseWCX();
     var mCamY = this.mCamera.mouseWCY();
     if (mCamY > 110)
@@ -80,7 +112,7 @@ Level0.prototype.missileSpawn = function(spawnPos) {
     this.mTargetSet.addToSet(new Target(this.kTargetSprite, target));
 };
 
-Level0.prototype.spawnFallingRocks = function(x, y){
+Level2.prototype.spawnFallingRocks = function(x, y){
   var mRock = new RockSpawner(this.kBreakableSprite, this.kFallingRock, this.mBreakableSet);
   mRock.getXform().setXPos(x);
   mRock.getXform().setYPos(y);
