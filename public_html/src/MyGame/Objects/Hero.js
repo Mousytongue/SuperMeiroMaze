@@ -21,7 +21,7 @@ function Hero(spriteTexture) {
     this.mDye.setElementPixelPositions(0, 60, 78, 128);
     GameObject.call(this, this.mDye);
     
-    this.mMoveSpeed = 1;
+    this.mMoveSpeed = .75;
     this.mX = 9;           //Width
     this.mY = 12;          //Height
     this.mFlashing = true;

@@ -30,10 +30,27 @@ Level1.prototype.SpawnWorldFromArray = function (){
             if (this.mWorldArray[i][j] === "6")
                 this.spawnFallingRocks(j*10, 100 - (i*10));
             if (this.mWorldArray[i][j] === "X")
-                this.spawnSaw(j*10, 100 - (i*10));
-            }
+                this.spawnSaw(j*10, 100 - (i*10));            
+            if(this.mWorldArray[i][j] === "S")
+                this.spawnStart(j*10, 100- (i*10));
+            if(this.mWorldArray[i][j] === "E")
+                this.spawnEnd(j*10, 100- (i*10));
         }
-    };
+    }
+};
+Level1.prototype.spawnStart = function (x, y) {
+  var mStart = new StartLine();
+  mStart.getXform().setSize(10,10);
+  mStart.getXform().setPosition(x,y);
+  this.mWorldObjects.addToSet(mStart);
+};
+
+Level1.prototype.spawnEnd = function (x, y) {
+  var mStart = new EndLine();
+  mStart.getXform().setSize(10,10);
+  mStart.getXform().setPosition(x,y);
+  this.mWorldObjects.addToSet(mStart);
+};
 
 Level1.prototype.spawnSaw = function (x, y) {
   var mSaw = new Saw(this.kNinjaStar);
@@ -104,7 +121,7 @@ Level1.prototype.missileSpawn = function(spawnPos) {
     if (mCamY < -35)
         mCamY = -35;
     var target = vec2.fromValues(mCamX, mCamY);
-    console.log(target);
+    
       
     var missile = new Missile(this.kMissileSprite, spawnPos);
     missile.setDirection(target);

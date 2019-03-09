@@ -67,4 +67,5 @@ Level2.prototype.Spawn2Init = function (){
     this.mMissileSet = new GameObjectSet();
     this.mTargetSet = new GameObjectSet();
     this.mBreakableSet = new GameObjectSet();
+    this.UIText.setText("World 2-2");
 };
