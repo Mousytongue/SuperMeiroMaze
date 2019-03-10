@@ -9,7 +9,7 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function RockSpawner(tex_spawn, tex_rock, objectarray) {
+function BigRockSpawner(tex_spawn, tex_rock, objectarray) {
     this.rock_tex = tex_rock;
     this.objarr = objectarray;
     this.Counter = 0;
@@ -18,11 +18,10 @@ function RockSpawner(tex_spawn, tex_rock, objectarray) {
     this.mRenderable.setColor([1, 1, 1, 0]);
     GameObject.call(this, this.mRenderable);
     
-
 }
-gEngine.Core.inheritPrototype(RockSpawner, GameObject);
+gEngine.Core.inheritPrototype(BigRockSpawner, GameObject);
 
-RockSpawner.prototype.update = function () {
+BigRockSpawner.prototype.update = function () {
     var ranNum = Math.floor(Math.random() * 100);
     this.Counter += ranNum;
     
@@ -32,7 +31,7 @@ RockSpawner.prototype.update = function () {
     }
 };
 
-RockSpawner.prototype.SpawnRock = function (){ 
-    var p = new Rock(this.rock_tex, this.mRenderable.getXform().getPosition());
+BigRockSpawner.prototype.SpawnRock = function (){ 
+    var p = new BigRock(this.rock_tex, this.mRenderable.getXform().getPosition());
     this.objarr.addToSet(p);
 };

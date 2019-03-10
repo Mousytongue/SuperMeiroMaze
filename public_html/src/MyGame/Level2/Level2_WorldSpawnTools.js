@@ -28,16 +28,45 @@ Level2.prototype.SpawnWorldFromArray = function (){
             if (this.mWorldArray[i][j] === "_")
                 this.spawnRigidWall(j*10, 100 - (i*10), 0);
             if (this.mWorldArray[i][j] === "6")
-                this.spawnFallingRocks(j*10, 100 - (i*10));
+                this.spawnRockSpawner(j*10, 100 - (i*10));
+            if (this.mWorldArray[i][j] === "7")
+                this.spawnBigRockSpawner(j*10, 100 - (i*10));
+            if (this.mWorldArray[i][j] === "x")
+                this.spawnSaw(j*10, 100 - (i*10));  
             if (this.mWorldArray[i][j] === "X")
-                this.spawnSaw(j*10, 100 - (i*10));
+                this.spawnBigSaw(j*10, 100 - (i*10)); 
+            if(this.mWorldArray[i][j] === "S")
+                this.spawnStart(j*10, 100- (i*10));
+            if(this.mWorldArray[i][j] === "E")
+                this.spawnEnd(j*10, 100- (i*10));
             }
         }
     };
 
+Level2.prototype.spawnStart = function (x, y) {
+  var mStart = new StartLine();
+  mStart.getXform().setSize(10,10);
+  mStart.getXform().setPosition(x,y);
+  this.mWorldObjects.addToSet(mStart);
+};
+
+Level2.prototype.spawnEnd = function (x, y) {
+  var mStart = new EndLine();
+  mStart.getXform().setSize(10,10);
+  mStart.getXform().setPosition(x,y);
+  this.mWorldObjects.addToSet(mStart);
+};
+
 Level2.prototype.spawnSaw = function (x, y) {
   var mSaw = new Saw(this.kNinjaStar);
   mSaw.getXform().setSize(10,10);
+  mSaw.getXform().setPosition(x, y);
+  this.mWorldObjects.addToSet(mSaw);
+};
+
+Level2.prototype.spawnBigSaw = function (x, y) {
+  var mSaw = new Saw(this.kNinjaStar);
+  mSaw.getXform().setSize(30,30);
   mSaw.getXform().setPosition(x, y);
   this.mWorldObjects.addToSet(mSaw);
 };
@@ -110,8 +139,16 @@ Level2.prototype.missileSpawn = function(spawnPos) {
     this.mTargetSet.addToSet(new Target(this.kTargetSprite, target));
 };
 
-Level2.prototype.spawnFallingRocks = function(x, y){
+Level2.prototype.spawnRockSpawner = function(x, y){
   var mRock = new RockSpawner(this.kBreakableSprite, this.kFallingRock, this.mBreakableSet);
+  mRock.getXform().setXPos(x);
+  mRock.getXform().setYPos(y);
+  mRock.getXform().setSize(10,10);
+  this.mWorldObjects.addToSet(mRock);
+};
+
+Level2.prototype.spawnBigRockSpawner = function(x, y){
+  var mRock = new BigRockSpawner(this.kBreakableSprite, this.kFallingRock, this.mBreakableSet);
   mRock.getXform().setXPos(x);
   mRock.getXform().setYPos(y);
   mRock.getXform().setSize(10,10);

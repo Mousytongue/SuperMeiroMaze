@@ -15,7 +15,7 @@ const RETICLE_HEIGHT = 4;
 
 function Reticle(spriteTexture) {
 
-    this.mReticle = new TextureRenderable(spriteTexture);
+    this.mReticle = new SpriteRenderable(spriteTexture);
     this.mReticle.setColor([1, 1, 1, 0]);
     this.mReticle.getXform().setPosition(50,40);
     this.mReticle.getXform().setSize(RETICLE_WIDTH, RETICLE_HEIGHT);

@@ -21,7 +21,8 @@ function Hero(spriteTexture) {
     this.mDye.setElementPixelPositions(0, 60, 78, 128);
     GameObject.call(this, this.mDye);
     
-    this.mMoveSpeed = .75;
+    this.mHSpeed = .65;
+    this.mVSpeed = this.mHSpeed * .75;
     this.mX = 9;           //Width
     this.mY = 12;          //Height
     this.mFlashing = true;
@@ -35,42 +36,7 @@ gEngine.Core.inheritPrototype(Hero, GameObject);
 
 Hero.prototype.update = function (mCamera) {
     this.updateControls(mCamera);
-    
-    
-    
-    //Invunerable flash logic
-    //Ticks the timers when invunerable state
-    //if (this.mIsInvunerable){
-    //    this.mFlashTimer += 1;
-    //    this.mFlashTimer2 += 1;
-    //}
-    //every half second, the ship will change visibility state
-    //if (this.mFlashTimer2 >= 30){
-    //    if (this.mFlashing === true)
-    //        this.mFlashing = false;
-    //    else
-    //        this.mFlashing = true;
-    //    this.mFlashTimer2 = 0;
-    //}
-    //this.setVisibility(this.mFlashing);
-    //When time expires, resets the timers and removes invunerable state
-    //if (this.mFlashTimer >= this.mFlashTimerMax){
-    //    this.mIsInvunerable = false;
-    //    this.mFlashTimer = 0;
-    //    this.mFlashTimer2 = 0;
-    //}
-    //console.log(this.isVisible());
-   // console.log(this.getXform().getPosition());
-    
-    //Shake logic
-    //if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
-    //    this.hitShake();      
-    //if (!this.mShakePosition.shakeDone()){
-    //    var p = this.mShakePosition.getShakeResults();
-    //    xform.setSize(this.mX + p[0], this.mY + p[1]);
-    //}
-    //if (this.mShakePosition.shakeDone())
-    //    xform.setSize(this.mX, this.mY);
+
     
 }; 
 
@@ -79,7 +45,6 @@ Hero.prototype.updateControls = function (mCamera) {
     var mCurrentPos = xform.getPosition();
     var mCameraPos = mCamera.getWCCenter();
     
-    //improved controls
     //Left Right Jam
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W) && gEngine.Input.isKeyPressed(gEngine.Input.keys.S)){
         return;
@@ -91,58 +56,58 @@ Hero.prototype.updateControls = function (mCamera) {
     //Top Right
     else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W) && gEngine.Input.isKeyPressed(gEngine.Input.keys.D)){
         if (mCurrentPos[1] < 95)
-            xform.incYPosBy(this.mMoveSpeed/2);
+            xform.incYPosBy(this.mVSpeed);
         if (mCurrentPos[0] < mCameraPos[0] + 95)
-            xform.incXPosBy(this.mMoveSpeed/2);
+            xform.incXPosBy(this.mHSpeed);
         return;
     }
     //Top Left
     else if(gEngine.Input.isKeyPressed(gEngine.Input.keys.W) && gEngine.Input.isKeyPressed(gEngine.Input.keys.A)){
         if (mCurrentPos[1] < 95)
-            xform.incYPosBy(this.mMoveSpeed/2);
+            xform.incYPosBy(this.mVSpeed);
         if (mCurrentPos[0] > mCameraPos[0] - 90)
-            xform.incXPosBy(-this.mMoveSpeed/2);
+            xform.incXPosBy(-this.mHSpeed);
         return;
     }
     //Top
     else if(gEngine.Input.isKeyPressed(gEngine.Input.keys.W)){
         if (mCurrentPos[1] < 95)
-            xform.incYPosBy(this.mMoveSpeed);
+            xform.incYPosBy(this.mVSpeed);
         return;
     }
     //BotRight
     else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S) && gEngine.Input.isKeyPressed(gEngine.Input.keys.D)){
         if (mCurrentPos[1] > 5)
-            xform.incYPosBy(-this.mMoveSpeed/2);
+            xform.incYPosBy(-this.mVSpeed);
         if (mCurrentPos[0] < mCameraPos[0] + 95)
-            xform.incXPosBy(this.mMoveSpeed/2);
+            xform.incXPosBy(this.mHSpeed);
         return;
     }
     //BotLeft
     else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S) && gEngine.Input.isKeyPressed(gEngine.Input.keys.A)){
         if (mCurrentPos[1] > 5)
-            xform.incYPosBy(-this.mMoveSpeed/2);
+            xform.incYPosBy(-this.mVSpeed);
         if (mCurrentPos[0] > mCameraPos[0] - 90)
-            xform.incXPosBy(-this.mMoveSpeed/2);
+            xform.incXPosBy(-this.mHSpeed);
         return;
     }
     //Bot
     else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S)){
         if (mCurrentPos[1] > 5)
-            xform.incYPosBy(-this.mMoveSpeed);
+            xform.incYPosBy(-this.mVSpeed);
         return;
     }
     //Left
     else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A)){
         if (mCurrentPos[0] > mCameraPos[0] - 90)
-            xform.incXPosBy(-this.mMoveSpeed);
+            xform.incXPosBy(-this.mHSpeed);
         return;
     }
     //Right
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D))
     {
         if(mCurrentPos[0] < mCameraPos[0] + 95)
-            xform.incXPosBy(this.mMoveSpeed);
+            xform.incXPosBy(this.mHSpeed);
         return;
     }
 };
