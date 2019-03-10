@@ -13,7 +13,7 @@ function Saw(texture) {
     this.mRenderable = new SpriteRenderable(texture);
     this.mRenderable.setColor([1, 1, 1, 0.1]);
     GameObject.call(this, this.mRenderable);
-    this.mSpeed = 5;
+    this.mSpeed = 15;
 }
 gEngine.Core.inheritPrototype(Saw, GameObject);
 

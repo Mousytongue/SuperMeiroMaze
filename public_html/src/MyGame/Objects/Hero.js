@@ -34,79 +34,129 @@ function Hero(spriteTexture) {
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
 Hero.prototype.update = function (mCamera) {
-    var xform = this.getXform();    
-    var mCurrentPos = xform.getPosition();
-    var mCameraPos = mCamera.getWCCenter();
+    this.updateControls(mCamera);
     
-    //WASD controls
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W))
-    {
-        if (mCurrentPos[1] < 95)
-        xform.incYPosBy(this.mMoveSpeed);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A))
-    {
-        if (mCurrentPos[0] > mCameraPos[0] -90)
-        xform.incXPosBy(-this.mMoveSpeed);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S))
-    {
-        if (mCurrentPos[1] > 5)
-        xform.incYPosBy(-this.mMoveSpeed);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D))
-    {
-        if(mCurrentPos[0] < mCameraPos[0] + 95)
-        xform.incXPosBy(this.mMoveSpeed);
-    }
     
     
     //Invunerable flash logic
     //Ticks the timers when invunerable state
-    if (this.mIsInvunerable){
-        this.mFlashTimer += 1;
-        this.mFlashTimer2 += 1;
-    }
+    //if (this.mIsInvunerable){
+    //    this.mFlashTimer += 1;
+    //    this.mFlashTimer2 += 1;
+    //}
     //every half second, the ship will change visibility state
-    if (this.mFlashTimer2 >= 30){
-        if (this.mFlashing === true)
-            this.mFlashing = false;
-        else
-            this.mFlashing = true;
-        this.mFlashTimer2 = 0;
-    }
-    this.setVisibility(this.mFlashing);
+    //if (this.mFlashTimer2 >= 30){
+    //    if (this.mFlashing === true)
+    //        this.mFlashing = false;
+    //    else
+    //        this.mFlashing = true;
+    //    this.mFlashTimer2 = 0;
+    //}
+    //this.setVisibility(this.mFlashing);
     //When time expires, resets the timers and removes invunerable state
-    if (this.mFlashTimer >= this.mFlashTimerMax){
-        this.mIsInvunerable = false;
-        this.mFlashTimer = 0;
-        this.mFlashTimer2 = 0;
-    }
+    //if (this.mFlashTimer >= this.mFlashTimerMax){
+    //    this.mIsInvunerable = false;
+    //    this.mFlashTimer = 0;
+    //    this.mFlashTimer2 = 0;
+    //}
     //console.log(this.isVisible());
    // console.log(this.getXform().getPosition());
     
     //Shake logic
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
-        this.hitShake();      
-    if (!this.mShakePosition.shakeDone()){
-        var p = this.mShakePosition.getShakeResults();
-        xform.setSize(this.mX + p[0], this.mY + p[1]);
-    }
-    if (this.mShakePosition.shakeDone())
-        xform.setSize(this.mX, this.mY);
+    //if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q))
+    //    this.hitShake();      
+    //if (!this.mShakePosition.shakeDone()){
+    //    var p = this.mShakePosition.getShakeResults();
+    //    xform.setSize(this.mX + p[0], this.mY + p[1]);
+    //}
+    //if (this.mShakePosition.shakeDone())
+    //    xform.setSize(this.mX, this.mY);
     
 }; 
 
-Hero.prototype.setInvunerable = function (time){
-    this.mIsInvunerable = true;
-    this.mFlashTimerMax = time;      
+Hero.prototype.updateControls = function (mCamera) {
+    var xform = this.getXform();    
+    var mCurrentPos = xform.getPosition();
+    var mCameraPos = mCamera.getWCCenter();
+    
+    //improved controls
+    //Left Right Jam
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W) && gEngine.Input.isKeyPressed(gEngine.Input.keys.S)){
+        return;
+    }
+    //Top Bot Jam
+    else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A) && gEngine.Input.isKeyPressed(gEngine.Input.keys.D)){
+        return;
+    }
+    //Top Right
+    else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W) && gEngine.Input.isKeyPressed(gEngine.Input.keys.D)){
+        if (mCurrentPos[1] < 95)
+            xform.incYPosBy(this.mMoveSpeed/2);
+        if (mCurrentPos[0] < mCameraPos[0] + 95)
+            xform.incXPosBy(this.mMoveSpeed/2);
+        return;
+    }
+    //Top Left
+    else if(gEngine.Input.isKeyPressed(gEngine.Input.keys.W) && gEngine.Input.isKeyPressed(gEngine.Input.keys.A)){
+        if (mCurrentPos[1] < 95)
+            xform.incYPosBy(this.mMoveSpeed/2);
+        if (mCurrentPos[0] > mCameraPos[0] - 90)
+            xform.incXPosBy(-this.mMoveSpeed/2);
+        return;
+    }
+    //Top
+    else if(gEngine.Input.isKeyPressed(gEngine.Input.keys.W)){
+        if (mCurrentPos[1] < 95)
+            xform.incYPosBy(this.mMoveSpeed);
+        return;
+    }
+    //BotRight
+    else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S) && gEngine.Input.isKeyPressed(gEngine.Input.keys.D)){
+        if (mCurrentPos[1] > 5)
+            xform.incYPosBy(-this.mMoveSpeed/2);
+        if (mCurrentPos[0] < mCameraPos[0] + 95)
+            xform.incXPosBy(this.mMoveSpeed/2);
+        return;
+    }
+    //BotLeft
+    else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S) && gEngine.Input.isKeyPressed(gEngine.Input.keys.A)){
+        if (mCurrentPos[1] > 5)
+            xform.incYPosBy(-this.mMoveSpeed/2);
+        if (mCurrentPos[0] > mCameraPos[0] - 90)
+            xform.incXPosBy(-this.mMoveSpeed/2);
+        return;
+    }
+    //Bot
+    else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S)){
+        if (mCurrentPos[1] > 5)
+            xform.incYPosBy(-this.mMoveSpeed);
+        return;
+    }
+    //Left
+    else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A)){
+        if (mCurrentPos[0] > mCameraPos[0] - 90)
+            xform.incXPosBy(-this.mMoveSpeed);
+        return;
+    }
+    //Right
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D))
+    {
+        if(mCurrentPos[0] < mCameraPos[0] + 95)
+            xform.incXPosBy(this.mMoveSpeed);
+        return;
+    }
 };
 
-Hero.prototype.isInvunerable = function (){
-    return this.mIsInvunerable;
-};
+//Hero.prototype.setInvunerable = function (time){
+//    this.mIsInvunerable = true;
+ //   this.mFlashTimerMax = time;      
+//};
 
-Hero.prototype.hitShake = function () {
-    if (this.mShakePosition.shakeDone())
-        this.mShakePosition = new ShakePosition(4.5, 6, 4, 60); 
-};
+//Hero.prototype.isInvunerable = function (){
+//    return this.mIsInvunerable;
+//};
+
+//Hero.prototype.hitShake = function () {
+//    if (this.mShakePosition.shakeDone())
+//        this.mShakePosition = new ShakePosition(4.5, 6, 4, 60); 
+//};

@@ -104,7 +104,6 @@ Level2.prototype.missileSpawn = function(spawnPos) {
     if (mCamY < -35)
         mCamY = -35;
     var target = vec2.fromValues(mCamX, mCamY);
-    console.log(target);
       
     var missile = new Missile(this.kMissileSprite, spawnPos);
     missile.setDirection(target);
