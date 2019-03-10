@@ -13,8 +13,6 @@ function RockSpawner(tex_spawn, tex_rock, objectarray) {
     this.rock_tex = tex_rock;
     this.objarr = objectarray;
     this.Counter = 0;
-    this.LifeCounter = 0;
-    this.LifeLimit = 300; //5 second life
     //this.g = null;
     this.mRenderable = new TextureRenderable(tex_spawn);
     this.mRenderable.setColor([1, 1, 1, 0]);
@@ -30,7 +28,7 @@ RockSpawner.prototype.update = function () {
     var ranNum = Math.floor(Math.random() * 100);
     this.Counter += ranNum;
     
-    if(this.Counter > 10000){
+    if(this.Counter > 7500){
          this.SpawnRock();
          this.Counter = 0;
     }

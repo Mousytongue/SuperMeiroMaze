@@ -94,11 +94,13 @@ Level2.prototype.unloadScene = function () {
 
 Level2.prototype.initialize = function () {
     //UI
-    this.UIHealth1 = new UIHealthBar(this.kHealthBar,[50,675],[20,20],0);
-    this.UIHealth2 = new UIHealthBar(this.kHealthBar,[75,675],[20,20],0);
-    this.UIHealth3 = new UIHealthBar(this.kHealthBar,[100,675],[20,20],0);
-    this.UIEnergy = new UIHealthBar(this.kEnergyBar,[175,650],[300,20],0);
-    this.UIText = new UIText("World 2-1",[1200,700],3,1,0,[1,0,0,1]);
+    this.UIHealth1 = new UIHealthBar(this.kHealthBar,[30,675],[20,20],0);
+    this.UIHealth2 = new UIHealthBar(this.kHealthBar,[55,675],[20,20],0);
+    this.UIHealth3 = new UIHealthBar(this.kHealthBar,[80,675],[20,20],0);
+    this.UIEnergy = new UIHealthBar(this.kEnergyBar,[120,650],[200,20],0);
+    this.UITextLevel = new UIText("World 1-1",[1200,700],3,1,0,[1,0,0,1]);
+    this.UITextLives = new UIText("Lives", [40, 700], 2,1,0,[1,0,0,1]);
+    this.UITextEnergy = new UIText("Energy", [45,640], 2,1,0,[1,0,0,1]);
 
     
     //Hero/World/Camera/Background will be recreated within each new spawn world call
@@ -125,7 +127,9 @@ Level2.prototype.draw = function () {
     this.mBreakableSet.draw(this.mCamera);
     this.mWorldObjects.draw(this.mCamera); 
     this.mReticle.draw(this.mCamera);
-    this.UIText.draw(this.mCamera);
+    this.UITextLevel.draw(this.mCamera);
+    this.UITextLives.draw(this.mCamera);
+    this.UITextEnergy.draw(this.mCamera);
 };
 
 Level2.prototype.update = function () {

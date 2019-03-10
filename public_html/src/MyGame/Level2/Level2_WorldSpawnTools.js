@@ -105,8 +105,7 @@ Level2.prototype.missileSpawn = function(spawnPos) {
         mCamY = -35;
     var target = vec2.fromValues(mCamX, mCamY);
       
-    var missile = new Missile(this.kMissileSprite, spawnPos);
-    missile.setDirection(target);
+    var missile = new Missile(this.kMissileSprite, spawnPos, target);
     this.mMissileSet.addToSet(missile);
     this.mTargetSet.addToSet(new Target(this.kTargetSprite, target));
 };
