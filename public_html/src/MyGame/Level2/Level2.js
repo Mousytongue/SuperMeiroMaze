@@ -35,7 +35,7 @@ function Level2() {
     this.mWorldObjects = null;
     this.mDoorObjects = null;
     this.mHero = null;
-    this.mPanSpeed = 0.5;   
+    this.mPanSpeed = 0.3;   
     this.mReticle = null;
     
     this.mMissileSet = null;
@@ -138,18 +138,36 @@ Level2.prototype.update = function () {
     this.UIHealth2.update();
     this.UIHealth3.update();
     this.UIEnergy.update();
-    if (!this.mIsPaused){
-    this.mHero.update(this.mCamera);
-    this.mDoorObjects.update();
-    this.mCamera.update();
-    this.mReticle.update(this.mCamera);
-    this.mMissileSet.update();
-    this.mBreakableSet.update();
-    this.mWorldObjects.update();
-    this.panLevel();
-    this.detectCollide();
-    this.detectEnd();
-    this.detectSlow();
+    if (!this.mIsPaused){       
+        this.mHero.update(this.mCamera);
+        if (this.mIsSlowed && this.mUpdateThrot === 2){
+            this.mUpdateThrot = 0;
+            this.mDoorObjects.update();
+            this.mCamera.update();
+            this.mReticle.update(this.mCamera);
+            this.mMissileSet.update();
+            this.mBreakableSet.update();
+            this.mWorldObjects.update();
+            this.panLevel();
+            this.detectCollide();
+            this.detectEnd();
+            this.detectSlow();
+        }
+        else if (!this.mIsSlowed)
+        {
+            this.mUpdateThrot = 0;
+            this.mDoorObjects.update();
+            this.mCamera.update();
+            this.mReticle.update(this.mCamera);
+            this.mMissileSet.update();
+            this.mBreakableSet.update();
+            this.mWorldObjects.update();
+            this.panLevel();
+            this.detectCollide();
+            this.detectEnd();
+            this.detectSlow();
+        }
+        this.mUpdateThrot++;
     }
     
     //missle spawn    
@@ -175,13 +193,16 @@ Level2.prototype.update = function () {
 };
 
 Level2.prototype.detectSlow = function () {
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)){
-        mGlobalSpeed = 0.5;
-        this.UIEnergy.incCurrentHP(-.2);
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space) && this.UIEnergy.getCurrentHP() !== 0){
+        //mGlobalSpeed = 0.5;
+        this.mIsSlowed = true;
+        this.UIEnergy.incCurrentHP(-.5);
     }
-    if(gEngine.Input.isKeyReleased(gEngine.Input.keys.Space))
-        mGlobalSpeed = 1.0;
-    this.UIEnergy.incCurrentHP(.1);
+    if(!gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)){
+        //mGlobalSpeed = 1.0;
+        this.mIsSlowed = false;
+        this.UIEnergy.incCurrentHP(.1);
+    }
 };
 
 Level2.prototype.detectEnd = function () {
@@ -220,16 +241,13 @@ Level2.prototype.detectEnd = function () {
 Level2.prototype.detectCollide = function() {
   var h = [];  
   for (var i = 0; i < this.mWorldObjects.size(); i++){
-        if(!this.mHero.isInvunerable()){
            if (this.mHero.pixelTouches(this.mWorldObjects.getObjectAt(i), h)){
                 this.restart();
                 //this.mHero.setInvunerable(180);
                 break;
             }
-        }
   }
   for (var i = 0; i < this.mDoorObjects.size(); i++){
-        if(!this.mHero.isInvunerable()){
             var mCurrentSet = this.mDoorObjects.getObjectAt(i);
             var mTopSet = mCurrentSet.getTopSet();
             var mBotSet = mCurrentSet.getBotSet();
@@ -240,10 +258,8 @@ Level2.prototype.detectCollide = function() {
                     break;
                 }
             }
-        }
   }
   for (var i = 0; i < this.mBreakableSet.size(); i++){
-      if(!this.mHero.isInvunerable()){
           var wall = this.mBreakableSet.getObjectAt(i);
           if (wall.IsDead() === true)
           {             
@@ -254,8 +270,7 @@ Level2.prototype.detectCollide = function() {
               this.restart();
               //this.mHero.setInvunerable(180);
               break;
-          }
-      }
+          }      
   }
   
   
