@@ -68,5 +68,5 @@ Level2.prototype.Spawn4Init = function (){
     this.mMissileSet = new GameObjectSet();
     this.mTargetSet = new GameObjectSet();
     this.mBreakableSet = new GameObjectSet();
-    this.UIText.setText("World 2-4");
+    this.UITextLevel.setText("World 2-4");
 };

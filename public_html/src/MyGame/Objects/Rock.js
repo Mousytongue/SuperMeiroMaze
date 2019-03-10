@@ -11,7 +11,7 @@
 
 function Rock(tex_rock, pos) {
     this.LifeCounter = 0;
-    this.LifeLimit = 300; //5 second life
+    this.LifeLimit = 240; //4 second life
     this.mIsDead = false;
     var vx = (Math.random() - 0.5);
     var vy = (Math.random() - 0.5);

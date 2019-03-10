@@ -13,8 +13,9 @@
 const MISSILE_WIDTH = 2;
 const MISSILE_HEIGHT = 2;
 
-function Missile(spriteTexture, pos) {
+function Missile(spriteTexture, pos, target) {
 
+    this.mTarget = target;
     this.mMissile = new SpriteRenderable(spriteTexture);
     this.mMissile.setColor([1, 1, 1, 0]);
     this.mMissile.getXform().setPosition(pos[0], pos[1]-5);
@@ -38,10 +39,21 @@ Missile.prototype.update = function () {
         var pos = this.mInterp.getValue();
         var pX = pos[0];
         var pY = pos[1];
-        this.getXform().setPosition(pX, pY);
-        //if(this.mTimer > 60)
-        this.mMoveSpeed = (this.mTimer / 500) * mGlobalSpeed;
-        this.mInterp.setSpeed(this.mMoveSpeed);
+        this.getXform().setPosition(pX, pY);        
+    }
+    
+    //Move Forward after 15 miliseconds of hang time
+    if(this.mTimer > 15)
+    {
+        //Insert Sprite or particles of FIRE!
+        this.mMissile.getXform().incXPosBy(this.mMoveSpeed );
+    }
+    //Start chasing target
+    if (this.mTimer > 30){
+        if (this.mInterp === null)
+            this.setDirection(this.mTarget);
+       this.mMoveSpeed = (this.mTimer / 500);
+       this.mInterp.setSpeed(this.mMoveSpeed);
     }
 };
 
