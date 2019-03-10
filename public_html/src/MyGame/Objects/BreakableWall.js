@@ -15,6 +15,7 @@
 
 function BreakableWall(spriteTexture) {
     this.mIsDead = false;
+    this.mIsBreakable = true;
     this.mBreakableWall = new SpriteRenderable(spriteTexture);
     this.mBreakableWall.setColor([1, 1, 1, 0]);
     this.mBreakableWall.setElementPixelPositions(120, 300, 0, 180);
@@ -40,4 +41,8 @@ BreakableWall.prototype.IsDead = function () {
 
 BreakableWall.prototype.MarkDead = function (){
     this.mIsDead = true;
+};
+
+BreakableWall.prototype.IsBreakable = function (){
+    return this.mIsBreakable;
 };

@@ -34,7 +34,6 @@ function Level1() {
     // The camera to view the scene
     this.mCamera = null;
     this.LevelSelect = null;
-    this.UIHealth = null;
     this.UIEnergy = null;
     this.mBg = null;
     this.mWorldObjects = null;
@@ -111,13 +110,20 @@ Level1.prototype.unloadScene = function () {
 
 Level1.prototype.initialize = function () {
     //UI
-    this.UIHealth1 = new UIHealthBar(this.kHealthBar,[30,675],[20,20],0);
-    this.UIHealth2 = new UIHealthBar(this.kHealthBar,[55,675],[20,20],0);
-    this.UIHealth3 = new UIHealthBar(this.kHealthBar,[80,675],[20,20],0);
-    this.UIEnergy = new UIHealthBar(this.kEnergyBar,[120,650],[200,20],0);
-    this.UITextLevel = new UIText("World 1-1",[1200,700],3,1,0,[1,0,0,1]);
-    this.UITextLives = new UIText("Lives", [40, 700], 2,1,0,[1,0,0,1]);
-    this.UITextEnergy = new UIText("Energy", [45,640], 2,1,0,[1,0,0,1]);
+    this.UIHealth1 = new UIHealthBar(this.kHealthBar,[30,670],[20,20],0);
+    this.UIHealth2 = new UIHealthBar(this.kHealthBar,[55,670],[20,20],0);
+    this.UIHealth3 = new UIHealthBar(this.kHealthBar,[80,670],[20,20],0);
+    this.UIHealth4 = new UIHealthBar(this.kHealthBar,[105,670],[20,20],0);
+    this.UIHealth5 = new UIHealthBar(this.kHealthBar,[130,670],[20,20],0);
+    this.UIHealth6 = new UIHealthBar(this.kHealthBar,[155,670],[20,20],0);
+    this.UIHealth7 = new UIHealthBar(this.kHealthBar,[180,670],[20,20],0);
+    this.UIHealth8 = new UIHealthBar(this.kHealthBar,[205,670],[20,20],0);
+    this.UIHealth9 = new UIHealthBar(this.kHealthBar,[230,670],[20,20],0);
+    this.UIHealth10 = new UIHealthBar(this.kHealthBar,[255,670],[20,20],0);
+    this.UIEnergy = new UIHealthBar(this.kEnergyBar,[120,645],[200,20],0);
+    this.UITextLevel = new UIText("World 1-1",[1200,700],3,1,0,[0,1,1,1]);
+    this.UITextLives = new UIText("Lives", [40, 700], 2,1,0,[0,1,1,1]);
+    this.UITextEnergy = new UIText("Energy", [45,635], 2,1,0,[0,1,1,1]);
 
     
     //Hero/World/Camera/Background will be recreated within each new spawn world call
@@ -136,6 +142,13 @@ Level1.prototype.draw = function () {
     this.UIHealth1.draw(this.mCamera);
     this.UIHealth2.draw(this.mCamera);
     this.UIHealth3.draw(this.mCamera);
+    this.UIHealth4.draw(this.mCamera);
+    this.UIHealth5.draw(this.mCamera);
+    this.UIHealth6.draw(this.mCamera);
+    this.UIHealth7.draw(this.mCamera);
+    this.UIHealth8.draw(this.mCamera);
+    this.UIHealth9.draw(this.mCamera);
+    this.UIHealth10.draw(this.mCamera);  
     this.UIEnergy.draw(this.mCamera);
     this.mMissileSet.draw(this.mCamera);
     this.mTargetSet.draw(this.mCamera); 
@@ -161,6 +174,13 @@ Level1.prototype.update = function () {
     this.UIHealth1.update();
     this.UIHealth2.update();
     this.UIHealth3.update();
+    this.UIHealth4.update();
+    this.UIHealth5.update();
+    this.UIHealth6.update();
+    this.UIHealth7.update();
+    this.UIHealth8.update();
+    this.UIHealth9.update();
+    this.UIHealth10.update();
     this.UIEnergy.update();
     if (!this.mIsPaused){       
         this.mHero.update(this.mCamera);
@@ -316,25 +336,27 @@ Level1.prototype.detectCollide = function() {
         
         for(var j = 0; j < this.mBreakableSet.size(); ++j) {
             var wall = this.mBreakableSet.getObjectAt(j);
-            if(missile.pixelTouches(wall, h)) {
-                wall.MarkDead();
-                this.mMissileSet.removeFromSet(missile);
-                this.mTargetSet.removeFromSet(target);
-            }          
+            if (wall.IsBreakable()){
+                if(missile.pixelTouches(wall, h)) {
+                   wall.MarkDead();
+                   this.mMissileSet.removeFromSet(missile);
+                    this.mTargetSet.removeFromSet(target);
+                } 
+            }
         }        
     }   
 };
 
 Level1.prototype.panLevel = function () {
     //Camera
-    this.mCamera.panBy((this.mPanSpeed * 10) * mGlobalSpeed, 0.0);
+    this.mCamera.panBy((this.mPanSpeed * 10), 0.0);
     //Hero
-    this.mHero.getXform().incXPosBy(this.mPanSpeed * mGlobalSpeed);
+    this.mHero.getXform().incXPosBy(this.mPanSpeed);
     //Background
-    this.mBg.getXform().incXPosBy(this.mPanSpeed * mGlobalSpeed);
+    this.mBg.getXform().incXPosBy(this.mPanSpeed);
     
     for (var i = 0; i < this.mMissileSet.size(); i++){
-       this.mMissileSet.getObjectAt(i).getXform().incXPosBy(this.mPanSpeed * mGlobalSpeed); 
+       this.mMissileSet.getObjectAt(i).getXform().incXPosBy(this.mPanSpeed); 
     }
     
 };
@@ -351,11 +373,55 @@ Level1.prototype.restart = function(){
   }
   else if (this.UIHealth3.getCurrentHP() === 0){
       this.UIHealth2.setCurrentHP(0);
+      this.UIHealth2.setVisible(false);
+      this.restartLevel();
+  }
+  else if (this.UIHealth4.getCurrentHP() === 0)
+  {
+      this.UIHealth3.setCurrentHP(0);
+      this.UIHealth3.setVisible(false);
+      this.restartLevel();
+  }
+  else if (this.UIHealth5.getCurrentHP() === 0)
+  {
+      this.UIHealth4.setCurrentHP(0);
+      this.UIHealth4.setVisible(false);
+      this.restartLevel();
+  }
+  else if (this.UIHealth6.getCurrentHP() === 0)
+  {
+      this.UIHealth5.setCurrentHP(0);
+      this.UIHealth5.setVisible(false);
+      this.restartLevel();
+  }
+  else if (this.UIHealth7.getCurrentHP() === 0)
+  {
+      this.UIHealth6.setCurrentHP(0);
+      this.UIHealth6.setVisible(false);
+      this.restartLevel();
+  }
+  else if (this.UIHealth8.getCurrentHP() === 0)
+  {
+      this.UIHealth7.setCurrentHP(0);
+      this.UIHealth7.setVisible(false);
+      this.restartLevel();
+  }
+  else if (this.UIHealth9.getCurrentHP() === 0)
+  {
+      this.UIHealth8.setCurrentHP(0);
+      this.UIHealth8.setVisible(false);
+      this.restartLevel();
+  }
+  else if (this.UIHealth10.getCurrentHP() === 0)
+  {
+      this.UIHealth9.setCurrentHP(0);
+      this.UIHealth9.setVisible(false);
       this.restartLevel();
   }
   else
   {
-      this.UIHealth3.setCurrentHP(0);
+      this.UIHealth10.setCurrentHP(0);
+      this.UIHealth10.setVisible(false);
       this.restartLevel();
   }
   

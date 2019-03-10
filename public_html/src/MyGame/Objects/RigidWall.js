@@ -15,6 +15,7 @@
 
 function RigidWall(spriteTexture) {
     this.mIsDead = false;
+    this.mIsBreakable = false;
     this.mRigidWall = new SpriteRenderable(spriteTexture);
     this.mRigidWall.setColor([1, 1, 1, 0]);
     this.mRigidWall.setElementPixelPositions(120, 300, 0, 180);
@@ -39,4 +40,8 @@ RigidWall.prototype.IsDead = function () {
 
 RigidWall.prototype.MarkDead = function (){
     this.mIsDead = true;
+};
+
+RigidWall.prototype.IsBreakable = function (){
+    return this.mIsBreakable;
 };

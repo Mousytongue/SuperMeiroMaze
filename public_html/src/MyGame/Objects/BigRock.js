@@ -9,9 +9,11 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function Rock(tex_rock, pos) {
+function BigRock(tex_rock, pos) {
+    this.mXScale = 30;
+    this.mYScale = 30;
     this.LifeCounter = 0;
-    this.LifeLimit = 240; //4 second life
+    this.LifeLimit = 600; //10 second life
     this.mIsDead = false;
     this.mIsBreakable = false;
     var vx = (Math.random() - 0.5);
@@ -21,18 +23,18 @@ function Rock(tex_rock, pos) {
     this.mRock = new SpriteRenderable(tex_rock);
     this.mRock.setColor([1,1,1,0]);
    // this.mRock.setElementPixelPositions(0,64,0,64); 
-    this.mRock.getXform().setSize(5,5);
+    this.mRock.getXform().setSize(this.mXScale,this.mYScale);
     this.mRock.getXform().setPosition(pos[0], pos[1]-3);
     GameObject.call(this, this.mRock);
-    var r = new RigidCircle(this.mRock.getXform(), 0.35*Math.sqrt(5*5 + 5*5));
+    var r = new RigidCircle(this.mRock.getXform(), 0.35*Math.sqrt(this.mXScale*this.mYScale + this.mXScale*this.mYScale));
     this.setRigidBody(r);
     r.setVelocity(vx*speed, vy*speed);
     r.setMass(1);
     
 }
-gEngine.Core.inheritPrototype(Rock, GameObject);
+gEngine.Core.inheritPrototype(BigRock, GameObject);
 
-Rock.prototype.update = function () {
+BigRock.prototype.update = function () {
     this.LifeCounter++;
     
     if(this.LifeCounter > this.LifeLimit){
@@ -41,14 +43,14 @@ Rock.prototype.update = function () {
 GameObject.prototype.update.call(this);
 };
 
-Rock.prototype.IsDead = function(){
+BigRock.prototype.IsDead = function(){
     return this.mIsDead;
 };
 
-Rock.prototype.MarkDead = function(){
+BigRock.prototype.MarkDead = function(){
     this.mIsDead = true;
 };
 
-Rock.prototype.IsBreakable = function (){
+BigRock.prototype.IsBreakable = function (){
     return this.mIsBreakable;
 };

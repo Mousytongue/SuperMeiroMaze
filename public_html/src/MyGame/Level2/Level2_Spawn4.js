@@ -20,18 +20,18 @@ Level2.prototype.SpawnWorld4 = function () {
     //4 = large closing door   
     //5 = lazers! or falling rocks, TBD
     //X = Saw!
-    
-    var Row0 = "1111111111111111111111111111111111111111111111";
-    var Row1 = "000000000000X0000X0000000000000000000000000000";
-    var Row2 = "000000000X0000000000X0000000000000000000000000";
-    var Row3 = "0000000000X000X000X000000000000000000000000000";
-    var Row4 = "0000000000000000000000000000000000000000000000";
-    var Row5 = "00000000000X00X00X0000000000000000000000000000";
-    var Row6 = "0000000000000000000X00000000000000000000000000";
-    var Row7 = "0000000000000X00000000000000000000000000000000";
-    var Row8 = "000000000X00000000X00000000000000000000000000";
-    var Row9 = "00000000000X000X000000000000000000000000000000";
-    var Ro10 = "1111111111111111111111111111111111111111111111"; 
+                        //Start                                //450 units     
+var Row0 = "S111111111111111111111111111111111616161616161E";
+    var Row1 = "S00000000000000000000x000000000000000000000000E";
+    var Row2 = "S00000000000xxxxxxxxxx000000000000000000000000E";
+    var Row3 = "S0000000x000x0000000x0000000xxxxxxxxxxxxxxxxxxE";
+    var Row4 = "S0000000x000x0000000x0000000x00000000000000000E";
+    var Row5 = "S0000000x0000000x000xxxxx000x00000000000000000E";
+    var Row6 = "S0000000x0000000x00000000000x00000000000000000E";
+    var Row7 = "S0000000x000xxxxxxxxxxxxxxxxx00000000000000000E";
+    var Row8 = "S0000000x000x0000000x0000000x00000000000000000E";
+    var Row9 = "S0000000x0000000x0000000x000000000000000000000E";
+    var Ro10 = "S111111111111111111111111111111111111111111111E"; 
     this.mWorldArray[0] = Row0.split("");
     this.mWorldArray[1] = Row1.split("");
     this.mWorldArray[2] = Row2.split("");
@@ -54,7 +54,7 @@ Level2.prototype.Spawn4Init = function (){
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
             // sets the background to gray
-    gEngine.DefaultResources.setGlobalAmbientIntensity(3);
+    gEngine.DefaultResources.setGlobalAmbientIntensity(1.5);
            
     //Background
     this.mBg = new TextureRenderable(this.kBG);
