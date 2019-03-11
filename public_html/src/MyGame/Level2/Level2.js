@@ -29,7 +29,6 @@ function Level2() {
     // The camera to view the scene
     this.mCamera = null;
     this.LevelSelect = null;
-    this.UIHealth = null;
     this.UIEnergy = null;
     this.mBg = null;
     this.mWorldObjects = null;
@@ -37,6 +36,9 @@ function Level2() {
     this.mHero = null;
     this.mPanSpeed = 0.3;   
     this.mReticle = null;
+    this.mUpdateThrot = 0;
+    this.mCollideThrot = 0;
+    this.mIsSlowed = false;
     
     this.mMissileSet = null;
     this.mTargetSet = null;
@@ -47,6 +49,7 @@ function Level2() {
     //Testing 2d array for world generation
     this.mWorldArray = [];
     this.LevelCounter = 0;
+    this.mIsPaused = false;
 }
 gEngine.Core.inheritPrototype(Level2, Scene);
 
@@ -176,9 +179,12 @@ Level2.prototype.update = function () {
             this.mBreakableSet.update();
             this.mWorldObjects.update();
             this.panLevel();
-            this.detectCollide();
-            this.detectEnd();
-            this.detectSlow();
+            if (this.mCollideThrot === 4){
+                this.mCollideThrot = 0;
+                this.detectCollide();
+                this.detectEnd();
+                this.detectSlow();
+            }
         }
         else if (!this.mIsSlowed)
         {
@@ -190,11 +196,15 @@ Level2.prototype.update = function () {
             this.mBreakableSet.update();
             this.mWorldObjects.update();
             this.panLevel();
-            this.detectCollide();
-            this.detectEnd();
-            this.detectSlow();
+            if (this.mCollideThrot === 4){
+                this.mCollideThrot = 0;
+                this.detectCollide();
+                this.detectEnd();
+                this.detectSlow();
+            }
         }
         this.mUpdateThrot++;
+        this.mCollideThrot++;
     }
     
     //missle spawn    

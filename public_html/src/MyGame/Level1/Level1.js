@@ -42,6 +42,7 @@ function Level1() {
     this.mPanSpeed = 0.3;   
     this.mReticle = null;
     this.mUpdateThrot = 0;
+    this.mCollideThrot = 0;
     this.mIsSlowed = false;
     
     this.mMissileSet = null;
@@ -197,9 +198,12 @@ Level1.prototype.update = function () {
             this.mBreakableSet.update();
             this.mWorldObjects.update();
             this.panLevel();
-            this.detectCollide();
-            this.detectEnd();
-            this.detectSlow();
+            if (this.mCollideThrot === 4){
+                this.mCollideThrot = 0;
+                this.detectCollide();
+                this.detectEnd();
+                this.detectSlow();
+            }
         }
         else if (!this.mIsSlowed)
         {
@@ -211,11 +215,15 @@ Level1.prototype.update = function () {
             this.mBreakableSet.update();
             this.mWorldObjects.update();
             this.panLevel();
-            this.detectCollide();
-            this.detectEnd();
-            this.detectSlow();
+            if (this.mCollideThrot === 4){
+                this.mCollideThrot = 0;
+                this.detectCollide();
+                this.detectEnd();
+                this.detectSlow();
+            }
         }
         this.mUpdateThrot++;
+        this.mCollideThrot++;
     }
     
     //missle spawn    
