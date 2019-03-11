@@ -1,6 +1,6 @@
 /*
  * File: MyGame.js 
- * This is the logic of our game. 
+ * Super Meiro Maze  By Jacob Lefeat & Andrei Morokov
  */
 
 /*jslint node: true, vars: true */
