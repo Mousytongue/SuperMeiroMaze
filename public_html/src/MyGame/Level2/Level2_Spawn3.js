@@ -21,7 +21,7 @@ Level2.prototype.SpawnWorld3 = function () {
     //5 = lazers! or falling rocks, TBD
     //X = Saw!
                         //Start                                //450 units     
-    var Row0 = "S111111171117111711171117111711171117111711171E";
+    var Row0 = "S111111171111111711111117111111171111111711111E";
     var Row1 = "S000000000x0000x0000000000000x000000x00000x000E";
     var Row2 = "S000000x000000000000x0000x0000000x000000x00000E";
     var Row3 = "S0000000000x0000x000000000000000000000x0000000E";
@@ -54,7 +54,7 @@ Level2.prototype.Spawn3Init = function (){
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
             // sets the background to gray
-    gEngine.DefaultResources.setGlobalAmbientIntensity(2);
+    gEngine.DefaultResources.setGlobalAmbientIntensity(3);
            
     //Background
     this.mBg = new TextureRenderable(this.kBG);
