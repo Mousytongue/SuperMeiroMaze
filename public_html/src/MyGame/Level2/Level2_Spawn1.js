@@ -27,7 +27,7 @@ Level2.prototype.SpawnWorld1 = function () {
     var Row2 = "S000000000000000000000000000000000000000000000E";
     var Row3 = "S000000000000000000000000000000000000000000000E";
     var Row4 = "S000000000000000000000000000000000000000000000E";
-    var Row5 = "S000000000004444444444444444444444444444000000E";
+    var Row5 = "S000000444444444444444440004444444444444444400E";
     var Row6 = "S000000000000000000000000000000000000000000000E";
     var Row7 = "S000000000000000000000000000000000000000000000E";
     var Row8 = "S000000000000000000000000000000000000000000000E";
@@ -56,7 +56,7 @@ Level2.prototype.Spawn1Init = function () {
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
             // sets the background to gray
-    gEngine.DefaultResources.setGlobalAmbientIntensity(2);
+    gEngine.DefaultResources.setGlobalAmbientIntensity(3);
     
         
     //Background
