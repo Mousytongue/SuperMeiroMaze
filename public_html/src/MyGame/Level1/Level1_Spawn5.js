@@ -68,5 +68,6 @@ Level1.prototype.Spawn5Init = function (){
     this.mMissileSet = new GameObjectSet();
     this.mTargetSet = new GameObjectSet();
     this.mBreakableSet = new GameObjectSet();
+       this.mAllFire = new GameObjectSet();
     this.UITextLevel.setText("World 1-5");
 };

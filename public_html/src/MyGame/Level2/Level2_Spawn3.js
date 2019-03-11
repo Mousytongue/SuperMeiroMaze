@@ -69,4 +69,5 @@ Level2.prototype.Spawn3Init = function (){
     this.mTargetSet = new GameObjectSet();
     this.mBreakableSet = new GameObjectSet();
     this.UITextLevel.setText("World 2-3");
+       this.mAllFire = new GameObjectSet();
 };

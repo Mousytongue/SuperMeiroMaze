@@ -48,6 +48,7 @@ function Level1() {
     this.mTargetSet = null;
     this.mBreakableSet = null;
     this.mRigidSet = null;
+    this.mAllFire = null;
     
     //Testing 2d array for world generation
     this.mWorldArray = [];
@@ -125,7 +126,7 @@ Level1.prototype.initialize = function () {
     this.UITextLives = new UIText("Lives", [40, 700], 2,1,0,[0,1,1,1]);
     this.UITextEnergy = new UIText("Energy", [45,635], 2,1,0,[0,1,1,1]);
 
-    
+ 
     //Hero/World/Camera/Background will be recreated within each new spawn world call
     //Spawn world 1
     this.SpawnWorld1();
@@ -162,6 +163,7 @@ Level1.prototype.draw = function () {
     this.UITextLevel.draw(this.mCamera);
     this.UITextLives.draw(this.mCamera);
     this.UITextEnergy.draw(this.mCamera);
+    this.mAllFire.draw(this.mCamera);
     
 };
 
@@ -169,7 +171,9 @@ Level1.prototype.update = function () {
     
     //Physics
     gEngine.Physics.processCollision(this.mBreakableSet, this.mCollisionInfos);
-    //gEngine.ParticleSystem.collideWithRigidSet(this.mBreakableSet, this.mRigidSet);
+    gEngine.ParticleSystem.update(this.mAllFire);
+    //gEngine.ParticleSystem.collideWithRigidSet(this.mBreakableSet, this.mAllFire);
+    
     //Update Objects and UI
     this.UIHealth1.update();
     this.UIHealth2.update();
@@ -332,6 +336,7 @@ Level1.prototype.detectCollide = function() {
         if(tDiff < 5) {
             this.mMissileSet.removeFromSet(missile);
             this.mTargetSet.removeFromSet(target);
+            missile.markDead();
         }
         
         for(var j = 0; j < this.mBreakableSet.size(); ++j) {
@@ -341,6 +346,8 @@ Level1.prototype.detectCollide = function() {
                    wall.MarkDead();
                    this.mMissileSet.removeFromSet(missile);
                     this.mTargetSet.removeFromSet(target);
+                    this.mCamera.shake(1, 1, 20,30);
+                    missile.markDead();
                 } 
             }
         }        

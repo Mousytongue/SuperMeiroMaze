@@ -109,11 +109,11 @@ MovingDoor.prototype.update = function () {
                 }
                 for (var i = 0; i <= this.mCurrentMovingPoint; i++){
                     var xform = this.mTopSet[i].getXform();
-                    xform.incYPosBy(-this.mCloseSpeed * mGlobalSpeed);
+                    xform.incYPosBy(-this.mCloseSpeed);
                 }
                 for (var i = 0; i <= this.mCurrentMovingPoint; i++){
                     var xform = this.mBotSet[i].getXform();
-                    xform.incYPosBy(this.mCloseSpeed * mGlobalSpeed);
+                    xform.incYPosBy(this.mCloseSpeed);
                 }
             }
         }
@@ -126,12 +126,12 @@ MovingDoor.prototype.update = function () {
                 }
             for (var i = 0; i <= this.mCurrentMovingPoint; i++){
                 var xform = this.mTopSet[i].getXform();
-                xform.incYPosBy(+this.mCloseSpeed * mGlobalSpeed);
+                xform.incYPosBy(+this.mCloseSpeed);
                 //console.log("move loop reached");
                 }
             for (var i = 0; i <= this.mCurrentMovingPoint; i++){
                 var xform = this.mBotSet[i].getXform();
-                xform.incYPosBy(-this.mCloseSpeed * mGlobalSpeed);
+                xform.incYPosBy(-this.mCloseSpeed);
                 }
         }
 }; 
