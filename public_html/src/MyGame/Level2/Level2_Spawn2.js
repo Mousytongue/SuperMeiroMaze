@@ -53,7 +53,7 @@ Level2.prototype.Spawn2Init = function (){
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
             // sets the background to gray
-    gEngine.DefaultResources.setGlobalAmbientIntensity(2.5);
+    gEngine.DefaultResources.setGlobalAmbientIntensity(3);
            
     //Background
     this.mBg = new TextureRenderable(this.kBG);
