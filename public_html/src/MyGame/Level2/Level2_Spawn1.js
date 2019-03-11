@@ -71,4 +71,5 @@ Level2.prototype.Spawn1Init = function () {
     this.mMissileSet = new GameObjectSet();
     this.mTargetSet = new GameObjectSet();
     this.mBreakableSet = new GameObjectSet();  
+       this.mAllFire = new GameObjectSet();
 };

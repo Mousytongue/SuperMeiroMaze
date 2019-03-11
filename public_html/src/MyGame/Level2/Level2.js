@@ -16,7 +16,7 @@ function Level2() {
     this.kHealthBar = "assets/UI/healthbar.png";
     this.kEnergyBar = "assets/UI/energybar.png";
     this.kBG = "assets/OpenSource/cave.png";
-    this.kWallTexture = "assets/DyeAssets/bg2.png";
+    this.kWallTexture = "assets/RigidShape/Rock.png";
     this.kMinionSprite = "assets/DyeAssets/minion_sprite.png";
     this.kReticleSprite = "assets/OpenSource/crosshairs.png";
     this.kTargetSprite = "assets/OpenSource/target.png";
@@ -42,6 +42,7 @@ function Level2() {
     this.mTargetSet = null;
     this.mBreakableSet = null;
     this.mRigidSet = null;
+    this.mAllFire = null;
     
     //Testing 2d array for world generation
     this.mWorldArray = [];
@@ -108,7 +109,6 @@ Level2.prototype.initialize = function () {
     this.UITextLevel = new UIText("World 2-1",[1200,700],3,1,0,[0,1,1,1]);
     this.UITextLives = new UIText("Lives", [40, 700], 2,1,0,[0,1,1,1]);
     this.UITextEnergy = new UIText("Energy", [45,635], 2,1,0,[0,1,1,1]);
-
     
     //Hero/World/Camera/Background will be recreated within each new spawn world call
     //Spawn world 1
@@ -144,13 +144,15 @@ Level2.prototype.draw = function () {
     this.UITextLevel.draw(this.mCamera);
     this.UITextLives.draw(this.mCamera);
     this.UITextEnergy.draw(this.mCamera);
+    this.mAllFire.draw(this.mCamera);
 };
 
 Level2.prototype.update = function () {
     
     //Physics
     gEngine.Physics.processCollision(this.mBreakableSet, this.mCollisionInfos);
-    //gEngine.ParticleSystem.collideWithRigidSet(this.mBreakableSet, this.mRigidSet);
+    gEngine.ParticleSystem.update(this.mAllFire);
+    //gEngine.ParticleSystem.collideWithRigidSet(this.mBreakableSet, this.mAllParticles);
     //Update Objects and UI
     this.UIHealth1.update();
     this.UIHealth2.update();
@@ -313,9 +315,10 @@ Level2.prototype.detectCollide = function() {
             yDiff *= -1;
         var tDiff = xDiff+yDiff;
       
-        if(tDiff < 1) {
+        if(tDiff < 5) {
             this.mMissileSet.removeFromSet(missile);
             this.mTargetSet.removeFromSet(target);
+            missile.markDead();
         }
         
         for(var j = 0; j < this.mBreakableSet.size(); ++j) {
@@ -325,10 +328,12 @@ Level2.prototype.detectCollide = function() {
                  wall.MarkDead();
                  this.mMissileSet.removeFromSet(missile);
                  this.mTargetSet.removeFromSet(target);
+                 this.mCamera.shake(1, 1, 20,30);
+                 missile.markDead();
               } 
             }
         }        
-    }   
+    } 
 };
 
 Level2.prototype.panLevel = function () {

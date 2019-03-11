@@ -20,8 +20,6 @@ function Missile(spriteTexture, pos, target, fireset) {
     this.mMissile.setColor([1, 1, 1, 0]);
     this.mMissile.getXform().setPosition(pos[0], pos[1]-5);
     this.mMissile.getXform().setSize(MISSILE_WIDTH, MISSILE_HEIGHT);
-    //this.mMissile.getXform().incRotationByDegree(180);
-    
     this.mMissile.setElementPixelPositions(10, 35, 0, 40);
     this.mFire = null;
 
@@ -37,15 +35,24 @@ gEngine.Core.inheritPrototype(Missile, GameObject);
 
 Missile.prototype.update = function () {
     this.mTimer += 1;
-    //console.log(this.getCurrentFrontDir());
-
+    
+    var pos = this.mMissile.getXform().getPosition();
+    vec2.scaleAndAdd(pos, pos, this.getCurrentFrontDir(), this.mMoveSpeed);
+    
+    //if (this.mInterp !== null){
+    //    this.mInterp.updateInterpolation();
+    //    var pos = this.mInterp.getValue();
+    //    var pX = pos[0];
+    //    var pY = pos[1];
+    //    this.getXform().setPosition(pX, pY);        
+    //}
+    
     //Start chasing target
     if (this.mTimer > 40){
-        var pos = this.mMissile.getXform().getPosition();
-        vec2.scaleAndAdd(pos, pos, this.getCurrentFrontDir(), this.mTimer/20);
-        this.rotateObjPointTo(this.mTarget, this.mTimer/200);
-        //console.log(this.mTimer/500);
-        console.log(this.mTimer/15);
+        if (this.mInterp === null)
+            this.setDirection(this.mTarget);
+       //this.mMoveSpeed = (this.mTimer / 500);
+       //this.mInterp.setSpeed(this.mMoveSpeed);
     }
     //Move Forward after 15 miliseconds of hang time
     else if(this.mTimer > 15)
@@ -55,10 +62,10 @@ Missile.prototype.update = function () {
                 this.mFireSet.addToSet(this.mFire);
         }
         //Insert Sprite or particles of FIRE!
-        this.mMissile.getXform().incXPosBy(this.mTimer / 20);
+        this.mMissile.getXform().incXPosBy(this.mTimer / 10);
     }
     else{
-        this.mMissile.getXform().incYPosBy(-this.mMoveSpeed/3);
+        this.mMissile.getXform().incYPosBy(-this.mMoveSpeed/2);
     }
     
     
@@ -68,12 +75,12 @@ Missile.prototype.update = function () {
         this.mFire.setPos(xform.getXPos(), xform.getYPos());
 };
 
-//Missile.prototype.setDirection = function (mousePos){
- //   if(this.mInterp === null){
- //       this.mInterp = new InterpolateVec2(this.getXform().getPosition(), 120, .02);
-//        this.mInterp.setFinalValue(mousePos);
- //   }
-//};
+Missile.prototype.setDirection = function (mousePos){
+    if(this.mInterp === null){
+        this.mInterp = new InterpolateVec2(this.getXform().getPosition(), 120, .02);
+        this.mInterp.setFinalValue(mousePos);
+    }
+};
 
 Missile.prototype.markDead = function (){
   this.mFireSet.removeFromSet(this.mFire);  

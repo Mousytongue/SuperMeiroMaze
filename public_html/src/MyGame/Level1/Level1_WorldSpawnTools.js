@@ -113,6 +113,7 @@ Level1.prototype.spawnSmallDoor = function (x, y, d) {
         mDoor.setYCenter(y);
         mDoor.setHeight(40);
         mDoor.setInitialDelay(d);
+        mDoor.setSpeed(.75);
         this.mDoorObjects.addToSet(mDoor);
 };
 
@@ -134,7 +135,7 @@ Level1.prototype.missileSpawn = function(spawnPos) {
     var target = vec2.fromValues(mCamX, mCamY);
     
       
-    var missile = new Missile(this.kMissileSprite, spawnPos, target);
+    var missile = new Missile(this.kMissileSprite, spawnPos, target, this.mAllFire);
     this.mMissileSet.addToSet(missile);
     this.mTargetSet.addToSet(new Target(this.kTargetSprite, target));
 };
