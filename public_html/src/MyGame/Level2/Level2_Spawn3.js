@@ -44,6 +44,26 @@ Level2.prototype.SpawnWorld3 = function () {
     this.mWorldArray[9] = Row9.split("");
     this.mWorldArray[10] = Ro10.split("");
     this.SpawnWorldFromArray();   
+         this.SetLights();
+};
+
+Level2.prototype.SetLights = function () {
+      for (var i = 0; i < 4; i++) {
+        this.mHero.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        //this.mBg.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        for (var j = 0; j < this.mWorldObjects.size(); j++){
+            var obj = this.mWorldObjects.getObjectAt(j);
+            obj.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        }
+        for (var j = 0; j < this.mBreakableSet.size(); j++){
+            var obj = this.mBreakableSet.getObjectAt(j);
+            obj.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        }
+        //for (var j = 0; j < this.mDoorObjects.size(); j++){
+        //    var obj = this.mDoorObjects.getObjectAt(j);
+        //    obj.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        //}
+    }  
 };
 
 Level2.prototype.Spawn3Init = function (){
@@ -57,9 +77,16 @@ Level2.prototype.Spawn3Init = function (){
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
            
     //Background
-    this.mBg = new TextureRenderable(this.kBG);
-    this.mBg.getXform().setSize(200,180);
-    this.mBg.getXform().setPosition(30,20);
+    var bgR = new IllumRenderable(this.kBG, this.kBGNormal);
+    bgR.setElementPixelPositions(0, 1024, 0, 1024);
+    bgR.getXform().setSize(200,180);
+    bgR.getXform().setPosition(30,20);
+    bgR.getMaterial().setSpecular([1,0,0,1]);
+    var i;
+    for (i = 0; i < 4; i++) {
+        bgR.addLight(this.mGlobalLightSet.getLightAt(i));   // all the lights
+    }
+    this.mBg = new GameObject(bgR);
     
     this.mHero = new Hero(this.kShipSprite);
     this.mReticle = new Reticle(this.kReticleSprite);  
@@ -70,4 +97,5 @@ Level2.prototype.Spawn3Init = function (){
     this.mBreakableSet = new GameObjectSet();
     this.UITextLevel.setText("World 2-3");
        this.mAllFire = new GameObjectSet();
+       this.mStartEndLine = new GameObjectSet();
 };

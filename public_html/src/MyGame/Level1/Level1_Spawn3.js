@@ -25,9 +25,9 @@ Level1.prototype.SpawnWorld3 = function () {
     var Row1 = "S00000000000000000020000000200000x00000000000E";
     var Row2 = "S000000000000000000200000002000000000x0000000E";
     var Row3 = "S000000000000000000200000002000000000x0000000E";
-    var Row4 = "S00000000000000001121111111211000x00000000000E";
-    var Row5 = "S00000004440000001121111111211000x0000000X000E";
-    var Row6 = "S00000000000000001121111111211000x00000000000E";
+    var Row4 = "S00000000000000001121111111211000000000000000E";
+    var Row5 = "S000000044400000011211111112110000000000000X0E";
+    var Row6 = "S00000000000000001121111111211000000000000000E";
     var Row7 = "S000000000000000000200000002000000000x0000000E";
     var Row8 = "S000000000000000000200000002000000000x0000000E";
     var Row9 = "S00000000000000000020000000200000x00000000000E";
@@ -43,7 +43,27 @@ Level1.prototype.SpawnWorld3 = function () {
     this.mWorldArray[8] = Row8.split("");
     this.mWorldArray[9] = Row9.split("");
     this.mWorldArray[10] = Ro10.split("");
-    this.SpawnWorldFromArray();   
+    this.SpawnWorldFromArray();  
+    this.SetLights();
+};
+
+Level1.prototype.SetLights = function () {
+      for (var i = 0; i < 4; i++) {
+        this.mHero.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        //this.mBg.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        for (var j = 0; j < this.mWorldObjects.size(); j++){
+            var obj = this.mWorldObjects.getObjectAt(j);
+            obj.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        }
+        for (var j = 0; j < this.mBreakableSet.size(); j++){
+            var obj = this.mBreakableSet.getObjectAt(j);
+            obj.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        }
+        //for (var j = 0; j < this.mDoorObjects.size(); j++){
+        //    var obj = this.mDoorObjects.getObjectAt(j);
+        //    obj.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        //}
+    }  
 };
 
 Level1.prototype.Spawn3Init = function (){
@@ -57,9 +77,16 @@ Level1.prototype.Spawn3Init = function (){
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
            
     //Background
-    this.mBg = new TextureRenderable(this.kBG);
-    this.mBg.getXform().setSize(200,180);
-    this.mBg.getXform().setPosition(30,20);
+    var bgR = new IllumRenderable(this.kBG, this.kBGNormal);
+    bgR.setElementPixelPositions(0, 1024, 0, 1024);
+    bgR.getXform().setSize(200,180);
+    bgR.getXform().setPosition(30,20);
+    bgR.getMaterial().setSpecular([1,0,0,1]);
+    var i;
+    for (i = 0; i < 4; i++) {
+        bgR.addLight(this.mGlobalLightSet.getLightAt(i));   // all the lights
+    }
+    this.mBg = new GameObject(bgR);
     
     this.mHero = new Hero(this.kShipSprite);
     this.mReticle = new Reticle(this.kReticleSprite);  
@@ -69,5 +96,6 @@ Level1.prototype.Spawn3Init = function (){
     this.mTargetSet = new GameObjectSet();
     this.mBreakableSet = new GameObjectSet();
        this.mAllFire = new GameObjectSet();
+       this.mStartEndLine = new GameObjectSet();
     this.UITextLevel.setText("World 1-3");
 };

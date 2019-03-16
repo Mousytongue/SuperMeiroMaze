@@ -16,7 +16,7 @@
 function BreakableWall(spriteTexture) {
     this.mIsDead = false;
     this.mIsBreakable = true;
-    this.mBreakableWall = new SpriteRenderable(spriteTexture);
+    this.mBreakableWall = new LightRenderable(spriteTexture);
     this.mBreakableWall.setColor([1, 1, 1, 0]);
     this.mBreakableWall.setElementPixelPositions(120, 300, 0, 180);
     GameObject.call(this, this.mBreakableWall);

@@ -13,7 +13,7 @@ function Rock(tex_rock, pos) {
     this.LifeCounter = 0;
     this.LifeLimit = 240; //4 second life
     this.mIsDead = false;
-    this.mIsBreakable = false;
+    this.mIsBreakable = true;
     var vx = (Math.random() - 0.5);
     var vy = (Math.random() - 0.5);
     var speed = 20 + Math.random() * 10;

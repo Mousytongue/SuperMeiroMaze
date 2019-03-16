@@ -43,9 +43,7 @@ Missile.prototype.update = function () {
     if (this.mTimer > 40){
         var pos = this.mMissile.getXform().getPosition();
         vec2.scaleAndAdd(pos, pos, this.getCurrentFrontDir(), this.mTimer/20);
-        this.rotateObjPointTo(this.mTarget, this.mTimer/200);
-        //console.log(this.mTimer/500);
-        console.log(this.mTimer/15);
+        this.rotateObjPointTo(this.mTarget, this.mTimer/125);
     }
     //Move Forward after 15 miliseconds of hang time
     else if(this.mTimer > 15)

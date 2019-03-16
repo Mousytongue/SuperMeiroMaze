@@ -10,38 +10,37 @@
 /* find out more about jslint: http://www.jslint.com/help.html */
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
-function LevelSelect() {
+function YouWin() {
     this.kUIButton = "assets/UI/button.png";
     this.kBG = "assets/DyeAssets/bg.png";
+    this.kFontImage = "assets/fonts/system-default-font.png";
+    this.kFont = "assets/fonts/system-default-font";
     // The camera to view the scene
     this.mCamera = null;
     this.World1Button = null;
     this.World2Button = null;
     this.GoBackButton = null;
 }
-gEngine.Core.inheritPrototype(LevelSelect, Scene);
+gEngine.Core.inheritPrototype(YouWin, Scene);
 
 
-LevelSelect.prototype.loadScene = function () {
+YouWin.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kUIButton);
     gEngine.Textures.loadTexture(this.kBG);
+    gEngine.Textures.loadTexture(this.kFontImage);
+    gEngine.Fonts.loadFont(this.kFont);
 };
 
-LevelSelect.prototype.unloadScene = function () {
+YouWin.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kUIButton);
     gEngine.Textures.unloadTexture(this.kBG);
-    if(this.LevelSelect==="Level1"){
-        gEngine.Core.startScene(new Level1());
-    }
-    else if(this.LevelSelect==="Level2"){
-        gEngine.Core.startScene(new Level2());
-    }
-    else if(this.LevelSelect==="GoBack"){
+    
+    if(this.LevelSelect==="GoBack"){
         gEngine.Core.startScene(new MyGame());
     }
 };
 
-LevelSelect.prototype.initialize = function () {
+YouWin.prototype.initialize = function () {
     // Step A: set up the cameras
     this.mCamera = new Camera(
         vec2.fromValues(50, 40), // position of the camera
@@ -52,9 +51,12 @@ LevelSelect.prototype.initialize = function () {
             // sets the background to gray
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
     
-    this.World1Button = new UIButton(this.kUIButton,this.World1Select,this,[650,450],[600,100],"World One",8,[1,1,1,1],[0,0,0,1]);
-    this.World2Button = new UIButton(this.kUIButton,this.World2Select,this,[650,350],[750,100],"World Two",8,[1,1,1,1],[0,0,0,1]);
     this.GoBackButton = new UIButton(this.kUIButton,this.GoBackSelect,this,[650,250],[750,100],"Go Back",8,[1,1,1,1],[0,0,0,1]);
+    
+    this.mGameText = new FontRenderable("You Win");
+    this.mGameText.setFont(this.kFont);
+    this._initText(this.mGameText, 20, 70, [1, 1, 1 ,1], 16);
+    
     this.mBg = new TextureRenderable(this.kBG);
     this.mBg.getXform().setSize(200,180);
     this.mBg.getXform().setPosition(50,20);
@@ -62,35 +64,28 @@ LevelSelect.prototype.initialize = function () {
 
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
-LevelSelect.prototype.draw = function () {
+YouWin.prototype.draw = function () {
     // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
     
     
     this.mCamera.setupViewProjection();
-    this.World1Button.draw(this.mCamera);
-    this.World2Button.draw(this.mCamera);
     this.GoBackButton.draw(this.mCamera);
     this.mBg.draw(this.mCamera);
+    this.mGameText.draw(this.mCamera);
 };
 
-LevelSelect.prototype.update = function () {
-    this.World1Button.update();
-    this.World2Button.update();
+YouWin.prototype.update = function () {
     this.GoBackButton.update();
 };
 
-LevelSelect.prototype.World1Select = function(){
-    this.LevelSelect="Level1";
-    gEngine.GameLoop.stop();
-};
-
-LevelSelect.prototype.World2Select = function(){
-    this.LevelSelect="Level2";
-    gEngine.GameLoop.stop();
-};
-
-LevelSelect.prototype.GoBackSelect= function(){
+YouWin.prototype.GoBackSelect= function(){
     this.LevelSelect="GoBack";
     gEngine.GameLoop.stop();
+};
+
+YouWin.prototype._initText = function (font, posX, posY, color, textH) {
+    font.setColor(color);
+    font.getXform().setPosition(posX, posY);
+    font.setTextHeight(textH);
 };

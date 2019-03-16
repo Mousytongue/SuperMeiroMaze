@@ -16,7 +16,7 @@
 function RigidWall(spriteTexture) {
     this.mIsDead = false;
     this.mIsBreakable = false;
-    this.mRigidWall = new SpriteRenderable(spriteTexture);
+    this.mRigidWall = new LightRenderable(spriteTexture);
     this.mRigidWall.setColor([1, 1, 1, 0]);
     this.mRigidWall.setElementPixelPositions(120, 300, 0, 180);
     GameObject.call(this, this.mRigidWall);

@@ -10,20 +10,20 @@
 /* find out more about jslint: http://www.jslint.com/help.html */
 "use strict"
 
-Level1.prototype.SpawnWorld1 = function () {
+Level1.prototype.SpawnWorld1 = function () {  
     this.Spawn1Init();
                         //Start                                //450 units 
     var Row0 = "S111111111111111111111111111111111111111111111E";
-    var Row1 = "S000000111000000000000200000011100000020000000E";
-    var Row2 = "S000000011100000000000200000011100000020000000E";
-    var Row3 = "S000000001110000000001_100000111000001_1000000E";
-    var Row4 = "S000000000111000000001110000011100000111000000E";
-    var Row5 = "S000000000011100000001110000011100000111000000E";
-    var Row6 = "S000000000001110000001110000011100000111000000E";
-    var Row7 = "S000000000000111000001110000011100000111000000E";
-    var Row8 = "S000000000000000000001110000002000000111000000E";
-    var Row9 = "S000000000000000000001110000002000000111000000E";
-    var Ro10 = "S11111111111111111111111111111_111111111111111E"; 
+    var Row1 = "S000000000000000000000200000011100000020000000E";
+    var Row2 = "S000000000000000000000200000011100000020000000E";
+    var Row3 = "S000000000000000000000200000011100000020000000E";
+    var Row4 = "S000000000000000000000200000011100000020000000E";
+    var Row5 = "S000000000000000000000200000002000000020000000E";
+    var Row6 = "S0000000000000000000002000000020000001_1000000E";
+    var Row7 = "S000000000000000000000200000002000000111000000E";
+    var Row8 = "S000000000000000000000200000002000000111000000E";
+    var Row9 = "S000000000000000000000200000002000000111000000E";
+    var Ro10 = "S11111111111111111111___111111_111111111111111E"; 
  
     this.mWorldArray[0] = Row0.split("");
     this.mWorldArray[1] = Row1.split("");
@@ -37,7 +37,27 @@ Level1.prototype.SpawnWorld1 = function () {
     this.mWorldArray[9] = Row9.split("");
     this.mWorldArray[10] = Ro10.split("");
     //
-    this.SpawnWorldFromArray();                  
+    this.SpawnWorldFromArray(); 
+    this.SetLights();
+
+};
+
+Level1.prototype.SetLights = function () {
+      for (var i = 0; i < 4; i++) {
+        this.mHero.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));             
+        for (var j = 0; j < this.mWorldObjects.size(); j++){
+            var obj = this.mWorldObjects.getObjectAt(j);
+            obj.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        }
+        for (var j = 0; j < this.mBreakableSet.size(); j++){
+            var obj = this.mBreakableSet.getObjectAt(j);
+            obj.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        }
+        //for (var j = 0; j < this.mDoorObjects.size(); j++){
+        //    var obj = this.mDoorObjects.getObjectAt(j);
+        //    obj.getRenderable().addLight(this.mGlobalLightSet.getLightAt(i));
+        //}
+    }  
 };
 
 Level1.prototype.Spawn1Init = function () {
@@ -47,14 +67,21 @@ Level1.prototype.Spawn1Init = function () {
         [0, 0, mScreenX, mScreenY]         // viewport (orgX, orgY, width, height)
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
-            // sets the background to gray
+
+
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
-    
         
     //Background
-    this.mBg = new TextureRenderable(this.kBG);
-    this.mBg.getXform().setSize(200,180);
-    this.mBg.getXform().setPosition(30,20);
+    var bgR = new IllumRenderable(this.kBG, this.kBGNormal);
+    bgR.setElementPixelPositions(0, 1024, 0, 1024);
+    bgR.getXform().setSize(200,180);
+    bgR.getXform().setPosition(30,20);
+    bgR.getMaterial().setSpecular([1,0,0,1]);
+    var i;
+    for (i = 0; i < 4; i++) {
+        bgR.addLight(this.mGlobalLightSet.getLightAt(i));   // all the lights
+    }
+    this.mBg = new GameObject(bgR);
     
     this.mHero = new Hero(this.kShipSprite);
     this.mReticle = new Reticle(this.kReticleSprite);  
@@ -64,6 +91,7 @@ Level1.prototype.Spawn1Init = function () {
     this.mTargetSet = new GameObjectSet();
     this.mBreakableSet = new GameObjectSet(); 
     this.mAllFire = new GameObjectSet();
+    this.mStartEndLine = new GameObjectSet();
     this.spawnHelpText();
 };
 
