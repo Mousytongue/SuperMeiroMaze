@@ -14,7 +14,7 @@ function RockSpawner(tex_spawn, tex_rock, objectarray) {
     this.objarr = objectarray;
     this.Counter = 0;
     //this.g = null;
-    this.mRenderable = new TextureRenderable(tex_spawn);
+    this.mRenderable = new LightRenderable(tex_spawn);
     this.mRenderable.setColor([1, 1, 1, 0]);
     GameObject.call(this, this.mRenderable);
     

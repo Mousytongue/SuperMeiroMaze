@@ -4,7 +4,7 @@
  */
 
 /*jslint node: true, vars: true */
-/*global gEngine, Scene, GameObjectset, TextureObject, Camera, vec2, Reticle,
+/*global gEngine, Scene, GameObjectset, TextureObject, Camera, vec2, Reticle, Light, LightSet,
   FontRenderable, SpriteRenderable, LineRenderable,
   GameObj, mGlobalSpeed ect */
 /* find out more about jslint: http://www.jslint.com/help.html */
@@ -20,7 +20,8 @@ function Level1() {
     this.kUIButton = "assets/UI/button.png";
     this.kHealthBar = "assets/UI/healthbar.png";
     this.kEnergyBar = "assets/UI/energybar.png";
-    this.kBG = "assets/DyeAssets/bg.png";
+    this.kBG = "assets/DyeAssets/bg2.png";
+    this.kBGNormal = "assets/DyeAssets/bg2_normal.png";
     this.kWallTexture = "assets/DyeAssets/bg2.png";
     this.kMinionSprite = "assets/DyeAssets/minion_sprite.png";
     this.kReticleSprite = "assets/OpenSource/crosshairs.png";
@@ -33,6 +34,7 @@ function Level1() {
     
     // The camera to view the scene
     this.mCamera = null;
+    this.mSCamera = null;
     this.LevelSelect = null;
     this.UIEnergy = null;
     this.mBg = null;
@@ -44,6 +46,9 @@ function Level1() {
     this.mUpdateThrot = 0;
     this.mCollideThrot = 0;
     this.mIsSlowed = false;
+    this.mMapOn = true;
+    
+    this.mGlobalLightSet = null;
     
     this.mMissileSet = null;
     this.mTargetSet = null;
@@ -74,6 +79,7 @@ Level1.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kFallingRock);
     gEngine.Textures.loadTexture(this.kNinjaStar);
     gEngine.Textures.loadTexture(this.kFontImage);
+    gEngine.Textures.loadTexture(this.kBGNormal);
     
     //Fonts
     gEngine.Fonts.loadFont(this.kFont);
@@ -93,10 +99,7 @@ Level1.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kBreakableSprite);
     gEngine.Textures.unloadTexture(this.kFallingRock);
     gEngine.Textures.unloadTexture(this.kNinjaStar);
-    //gEngine.Textures.unloadTexture(this.kFontImage);
-    
-    //Fonts
-    //gEngine.Fonts.unloadFont(this.kFont);
+    gEngine.Textures.unloadTexture(this.kBGNormal);
     
     //new Scenes
     if(this.LevelSelect==="Level1"){
@@ -106,7 +109,7 @@ Level1.prototype.unloadScene = function () {
         gEngine.Core.startScene(new Level2());
     }   
     if (this.LevelSelect==="MyGame"){
-        gEngine.Core.startScene(new MyGame());
+        gEngine.Core.startScene(new GameOver());
     }
 };
 
@@ -126,8 +129,17 @@ Level1.prototype.initialize = function () {
     this.UITextLevel = new UIText("World 1-1",[1200,700],3,1,0,[0,1,1,1]);
     this.UITextLives = new UIText("Lives", [40, 700], 2,1,0,[0,1,1,1]);
     this.UITextEnergy = new UIText("Energy", [45,635], 2,1,0,[0,1,1,1]);
-
- 
+    
+    //Lights
+    this._initializeLights();
+    
+    //MiniMapCam
+    this.mSCamera = new Camera(
+            vec2.fromValues(230,50),
+            470,
+            [0,0, mScreenX/4, mScreenY/10]
+            );
+    
     //Hero/World/Camera/Background will be recreated within each new spawn world call
     //Spawn world 1
     this.SpawnWorld1();
@@ -160,11 +172,22 @@ Level1.prototype.draw = function () {
     this.mDoorObjects.draw(this.mCamera);
     this.mBreakableSet.draw(this.mCamera);
     this.mWorldObjects.draw(this.mCamera); 
+    this.mStartEndLine.draw(this.mCamera);
     this.mReticle.draw(this.mCamera);
     this.UITextLevel.draw(this.mCamera);
     this.UITextLives.draw(this.mCamera);
     this.UITextEnergy.draw(this.mCamera);
     this.mAllFire.draw(this.mCamera);
+    
+    //Camera 2
+    if (this.mMapOn){
+    this.mSCamera.setupViewProjection();
+    this.mStartEndLine.draw(this.mSCamera);
+    this.mBreakableSet.draw(this.mSCamera);
+    this.mWorldObjects.draw(this.mSCamera);
+    this.mDoorObjects.draw(this.mSCamera);
+    this.mHero.draw(this.mSCamera);
+    }
     
 };
 
@@ -241,11 +264,24 @@ Level1.prototype.update = function () {
             this.mIsPaused = true;
         }
     }    
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.M))
+    {
+        if (this.mMapOn)
+            this.mMapOn = false;
+        else
+            this.mMapOn = true;
+    }
 
     //For testing purposes
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.N)) 
         this.mHero.getXform().incXPosBy(450);  
     
+    //Spotlight Update
+    var lDist = 0; //Light distance from Ship
+    var hPos = this.mHero.getXform().getPosition();
+    var newPos = vec2.fromValues(hPos[0]+lDist, hPos[1] );
+    var light = this.mGlobalLightSet.getLightAt(2);
+    light.set2DPosition(newPos);
 };
 
 Level1.prototype.detectSlow = function () {
@@ -296,6 +332,12 @@ Level1.prototype.detectEnd = function () {
 
 Level1.prototype.detectCollide = function() {
   var h = [];  
+  //var xform = this.mHero.getXform();
+  //var hPos = xform.getPosition();
+  //var xPos = Math.floor(hPos[0] / 10);
+  //var yPos = Math.floor(hPos[1] / 10);
+  //console.log("X: " + xPos + "Y: " + yPos);
+  
   for (var i = 0; i < this.mWorldObjects.size(); i++){
            if (this.mHero.pixelTouches(this.mWorldObjects.getObjectAt(i), h)){
                 this.restart();
@@ -458,4 +500,70 @@ Level1.prototype.restartLevel = function (){
     if (this.LevelCounter ===5){
         this.SpawnWorld5();
     }
+};
+
+Level1.prototype._createALight = function (type, pos, dir, color, n, f, inner, outer, intensity, dropOff) {
+    var light = new Light();
+    light.setLightType(type);
+    light.setColor(color);
+    light.setXPos(pos[0]);
+    light.setYPos(pos[1]);      
+    light.setZPos(pos[2]);
+    light.setDirection(dir);
+    light.setNear(n);
+    light.setFar(f);
+    light.setInner(inner);
+    light.setOuter(outer);
+    light.setIntensity(intensity);
+    light.setDropOff(dropOff);
+
+    return light;
+};
+
+Level1.prototype._initializeLights = function () {
+    this.mGlobalLightSet = new LightSet();
+
+    var l = this._createALight(Light.eLightType.ePointLight,
+            [15, 50, 5],         // position
+            [0, 0, -1],          // Direction 
+            [0,0, 0, 1],  // some color
+            8, 20,               // near and far distances
+            0.1, 0.2,            // inner and outer cones
+            5,                   // intensity
+            1.0                  // drop off
+            );
+    this.mGlobalLightSet.addToSet(l);
+
+    l = this._createALight(Light.eLightType.eDirectionalLight,
+            [15, 50, 4],           // position (not used by directional)
+            [-0.2, -0.2, -1],      // Pointing direction upwards
+            [0, 0, 0, 0],    // color
+            500, 500,              // near anf far distances: essentially switch this off
+            0.1, 0.2,              // inner and outer cones
+            1,                     // intensity
+            1.0                    // drop off
+            );
+    this.mGlobalLightSet.addToSet(l);
+
+    l = this._createALight(Light.eLightType.eSpotLight,
+            [80, 18, 10],            // Right minion position
+            [1,  0, -.07],     // direction
+            [1.0, 1.0, 1.0, 1],     // color
+            100, 100,                  // near and far distances
+            1, 1.7,               // inner outter angles (in radius)
+            1,                     // intensity
+            1.2                     // drop off
+            );
+    this.mGlobalLightSet.addToSet(l);
+
+    l = this._createALight(Light.eLightType.eSpotLight,
+            [64, 43, 10],            // Center of camera 
+            [0.0, 0.03, -1],
+            [0.0, 0.0, 0.0, 1],      //  color
+            100, 100,                   // near and far distances
+            1.9, 2.0,                // inner and outer cones
+            2,                       // intensity
+            1                      // drop off
+            );
+    this.mGlobalLightSet.addToSet(l);
 };

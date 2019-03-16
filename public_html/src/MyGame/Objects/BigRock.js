@@ -20,7 +20,7 @@ function BigRock(tex_rock, pos) {
     var vy = (Math.random() - 0.5);
     var speed = 20 + Math.random() * 10;
     //
-    this.mRock = new SpriteRenderable(tex_rock);
+    this.mRock = new LightRenderable(tex_rock);
     this.mRock.setColor([1,1,1,0]);
    // this.mRock.setElementPixelPositions(0,64,0,64); 
     this.mRock.getXform().setSize(this.mXScale,this.mYScale);

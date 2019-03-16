@@ -47,14 +47,14 @@ Level2.prototype.spawnStart = function (x, y) {
   var mStart = new StartLine();
   mStart.getXform().setSize(10,10);
   mStart.getXform().setPosition(x,y);
-  this.mWorldObjects.addToSet(mStart);
+  this.mStartEndLine.addToSet(mStart);
 };
 
 Level2.prototype.spawnEnd = function (x, y) {
   var mStart = new EndLine();
   mStart.getXform().setSize(10,10);
   mStart.getXform().setPosition(x,y);
-  this.mWorldObjects.addToSet(mStart);
+  this.mStartEndLine.addToSet(mStart);
 };
 
 Level2.prototype.spawnSaw = function (x, y) {

@@ -10,7 +10,7 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 function Saw(texture) {
-    this.mRenderable = new SpriteRenderable(texture);
+    this.mRenderable = new LightRenderable(texture);
     this.mRenderable.setColor([1, 1, 1, 0.1]);
     GameObject.call(this, this.mRenderable);
     this.mSpeed = 15;
